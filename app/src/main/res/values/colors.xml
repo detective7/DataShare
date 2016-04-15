@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+    <color name="colorTra">#88303F9F</color>
+    <color name="ziTi">#DDE0E5</color>
+    <color name="qianZiTi">#9cb0c9</color>
+    <color name="huiLv">#2b7d89</color>
+    <color name="qianHui">#2b7d89</color>
+    <color name="caiDan">#3c3f41</color>
+</resources>
