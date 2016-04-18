@@ -74,7 +74,7 @@ public class SignInActivity extends Activity {
                 } else if ("".equals(userNum) || userNum == null) {
                     Toast.makeText(SignInActivity.this, "请输入学号", Toast.LENGTH_SHORT).show();
                 } else {
-                    //To do 验证学号是否存在
+                    // TODO 验证学号是否存在已经放在点击注册那里，有空再完成这里，异步有两次连接
                 }
 
             }
