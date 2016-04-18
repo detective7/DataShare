@@ -66,7 +66,7 @@ public class JsonPost {
             }
             is.close();
             json = sb.toString();
-//            Log.d("json", json.toString());
+            Log.d("json", json.toString());
         } catch (Exception e) {
             Log.e("json Buffer Error", "Error converting result " + e.toString());
 //            Log.d("json", json.toString());
