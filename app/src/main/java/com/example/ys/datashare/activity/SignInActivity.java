@@ -110,6 +110,7 @@ public class SignInActivity extends Activity {
             @Override
             public void onClick(View v) {
                 // TODO 验证码
+
             }
         });
 
