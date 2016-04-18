@@ -4,6 +4,10 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -20,6 +24,9 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import cn.smssdk.EventHandler;
+import cn.smssdk.SMSSDK;
+
 public class SignInActivity extends Activity {
 
     private TextView zhuCeBack, faSongYanZheng;
@@ -27,8 +34,12 @@ public class SignInActivity extends Activity {
     private Button zhuCe;
     private static String urlZhuCe = "http://192.168.88.101/testShare/signIn.php";
     private ProgressDialog pDialog;
-    String userNum, password,password_copy, phone;
+    String userNum, password, password_copy, phone;
     JsonPost jsonParser = new JsonPost();
+    String APPKEY = "11bc365b9eff2";
+    String APPSECRETE = "658f26cd66e813667521d0a915d95b56";
+    //倒计时是秒数
+    int i = 30;
 
 
     @Override
@@ -43,6 +54,20 @@ public class SignInActivity extends Activity {
         zhuCeMiMa2 = (EditText) this.findViewById(R.id.zhuCeMiMa2);
         zhuCeShouJi = (EditText) this.findViewById(R.id.zhuCeShouJi);
         yanZhengMa = (EditText) this.findViewById(R.id.yanZhengMa);
+
+        SMSSDK.initSDK(this, APPKEY, APPSECRETE);
+        EventHandler eventHandler = new EventHandler() {
+            @Override
+            public void afterEvent(int event, int result, Object data) {
+                Message msg = new Message();
+                msg.arg1 = event;
+                msg.arg2 = result;
+                msg.obj = data;
+                handler.sendMessage(msg);
+            }
+        };
+        //注册回调监听接口
+        SMSSDK.registerEventHandler(eventHandler);
 
         zhuCe = (Button) this.findViewById(R.id.zhuCe);
 
@@ -60,7 +85,7 @@ public class SignInActivity extends Activity {
                 password = zhuCeMiMa.getText().toString();
                 phone = zhuCeShouJi.getText().toString();
                 if (dataTrue()) {
-                    new Send().execute();
+                    //new Send().execute();
                 }
             }
         });
@@ -84,9 +109,9 @@ public class SignInActivity extends Activity {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 password = zhuCeMiMa.getText().toString();
-                if(hasFocus){
+                if (hasFocus) {
 
-                }else if("".equals(password) || password == null){
+                } else if ("".equals(password) || password == null) {
                     Toast.makeText(SignInActivity.this, "请输入密码", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -96,11 +121,11 @@ public class SignInActivity extends Activity {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 password_copy = zhuCeMiMa2.getText().toString();
-                if(hasFocus){
+                if (hasFocus) {
 
-                }else if("".equals(password_copy) || password_copy == null){
+                } else if ("".equals(password_copy) || password_copy == null) {
                     Toast.makeText(SignInActivity.this, "请再次密码", Toast.LENGTH_SHORT).show();
-                }else if(!password_copy.equals(password)){
+                } else if (!password_copy.equals(password)) {
                     Toast.makeText(SignInActivity.this, "再次密码错误", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -109,18 +134,45 @@ public class SignInActivity extends Activity {
         faSongYanZheng.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // TODO 验证码
+                phone = zhuCeShouJi.getText().toString();
+                // 1. 通过规则判断手机号
+                if (!judgePhoneNums(phone)) {
+                    return;
+                } // 2. 通过sdk发送短信验证
+                SMSSDK.getVerificationCode("86", phone);
+
+                // 3. 把按钮变成不可点击，并且显示倒计时（正在获取）
+                faSongYanZheng.setClickable(false);
+                faSongYanZheng.setText("重新发送(" + i + ")");
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        for (; i > 0; i--) {
+                            handler.sendEmptyMessage(-9);
+                            if (i <= 0) {
+                                break;
+                            }
+                            try {
+                                Thread.sleep(1000);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        handler.sendEmptyMessage(-8);
+                    }
+                }).start();
 
             }
         });
-
-
     }
 
     /**
-     * @return 判断注册时输入数据的正确性
+     * @return 判断验证码是否正确
      */
     private boolean dataTrue() {
+        SMSSDK.submitVerificationCode("86", phone, yanZhengMa
+                .getText().toString());
+        //TODO 验证码的校验，返回数字3，这里要发一个空handler过去查看msg，服务端有问题，再测
         return true;
     }
 
@@ -157,7 +209,91 @@ public class SignInActivity extends Activity {
             super.onPostExecute(s);
             pDialog.dismiss();
             //doInBackground返回值-->s
-            Toast.makeText(getApplicationContext(), s, Toast.LENGTH_LONG).show();
+            //Toast.makeText(getApplicationContext(), s, Toast.LENGTH_LONG).show();
         }
+    }
+
+    /**
+     * 判断手机号码是否合理
+     *
+     * @param phoneNums
+     */
+    private boolean judgePhoneNums(String phoneNums) {
+        if (isMatchLength(phoneNums, 11)
+                && isMobileNO(phoneNums)) {
+            return true;
+        }
+        Toast.makeText(this, "手机号码输入有误！", Toast.LENGTH_SHORT).show();
+        return false;
+    }
+
+    /**
+     * 判断一个字符串的位数
+     *
+     * @param str
+     * @param length
+     * @return
+     */
+    public static boolean isMatchLength(String str, int length) {
+        if (str.isEmpty()) {
+            return false;
+        } else {
+            return str.length() == length ? true : false;
+        }
+    }
+
+    /**
+     * 验证手机格式
+     */
+    public static boolean isMobileNO(String mobileNums) {
+        /*
+         * 移动：134、135、136、137、138、139、150、151、157(TD)、158、159、187、188
+         * 联通：130、131、132、152、155、156、185、186 电信：133、153、180、189、（1349卫通）
+         * 总结起来就是第一位必定为1，第二位必定为3或5或8，其他位置的可以为0-9
+         */
+        String telRegex = "[1][358]\\d{9}";// "[1]"代表第1位为数字1，"[358]"代表第二位可以为3、5、8中的一个，"\\d{9}"代表后面是可以是0～9的数字，有9位。
+        if (TextUtils.isEmpty(mobileNums))
+            return false;
+        else
+            return mobileNums.matches(telRegex);
+    }
+
+
+    /**
+     * 消息处理
+     */
+    Handler handler = new Handler() {
+        public void handleMessage(Message msg) {
+            if (msg.what == -9) {
+                faSongYanZheng.setText("重新发送(" + i + ")");
+            } else if (msg.what == -8) {
+                faSongYanZheng.setText("获取验证码");
+                faSongYanZheng.setClickable(true);
+                i = 30;
+            } else {
+                int event = msg.arg1;
+                int result = msg.arg2;
+                Object data = msg.obj;
+                Log.e("event", "event=" + event);
+                if (result == SMSSDK.RESULT_COMPLETE) {
+                    //短信注册成功后，返回MainActivity,然后提示新好友
+                    if (event == SMSSDK.EVENT_SUBMIT_VERIFICATION_CODE) {//提交验证码成功,验证通过
+                        Toast.makeText(getApplicationContext(), "验证码校验成功", Toast.LENGTH_SHORT).show();
+                    } else if (event == SMSSDK.EVENT_GET_VERIFICATION_CODE) {//服务器验证码发送成功
+                        Toast.makeText(getApplicationContext(), "验证码已经发送", Toast.LENGTH_SHORT).show();
+                    } else if (event == SMSSDK.EVENT_GET_SUPPORTED_COUNTRIES) {//返回支持发送验证码的国家列表
+                        Toast.makeText(getApplicationContext(), "获取国家列表成功", Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    Toast.makeText(SignInActivity.this, "验证码错误", Toast.LENGTH_SHORT).show();
+                }
+            }
+        }
+    };
+
+    @Override
+    protected void onDestroy() {
+        SMSSDK.unregisterAllEventHandler();
+        super.onDestroy();
     }
 }
