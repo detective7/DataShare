@@ -19,7 +19,7 @@
         android:layout_height="55dp"
         android:layout_alignParentBottom="true"
         android:orientation="horizontal"
-        android:background="#44448a98">
+        android:background="#99448a98">
 
         <RadioButton
             android:id="@+id/tab_rb_a"

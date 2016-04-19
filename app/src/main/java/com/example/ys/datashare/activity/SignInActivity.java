@@ -191,11 +191,13 @@ public class SignInActivity extends Activity {
         } else if (phone == null || phone.equals("")) {
             pass = false;
             Toast.makeText(SignInActivity.this, "手机号不能为空", Toast.LENGTH_SHORT).show();
+        } else {
+            //TODO 有效性验证
+            SMSSDK.submitVerificationCode("86", phone, yanZhengMa
+                    .getText().toString());
+            //TODO 验证码的校验，返回数字3
+
         }
-        //TODO 这里非空验证还有有效性验证
-        SMSSDK.submitVerificationCode("86", phone, yanZhengMa
-                .getText().toString());
-        //TODO 验证码的校验，返回数字3，这里要发一个空handler过去查看msg，服务端有问题，再测
         return true;
     }
 
@@ -297,15 +299,13 @@ public class SignInActivity extends Activity {
                 int event = msg.arg1;
                 int result = msg.arg2;
                 Object data = msg.obj;
-                Log.e("event", "event=" + event);
+                Log.e("event", "event=" + event+"---result:"+result);
                 if (result == SMSSDK.RESULT_COMPLETE) {
                     //短信注册成功后，返回MainActivity,然后提示新好友
                     if (event == SMSSDK.EVENT_SUBMIT_VERIFICATION_CODE) {//提交验证码成功,验证通过
                         Toast.makeText(getApplicationContext(), "验证码校验成功", Toast.LENGTH_SHORT).show();
                     } else if (event == SMSSDK.EVENT_GET_VERIFICATION_CODE) {//服务器验证码发送成功
                         Toast.makeText(getApplicationContext(), "验证码已经发送", Toast.LENGTH_SHORT).show();
-                    } else if (event == SMSSDK.EVENT_GET_SUPPORTED_COUNTRIES) {//返回支持发送验证码的国家列表
-                        Toast.makeText(getApplicationContext(), "获取国家列表成功", Toast.LENGTH_SHORT).show();
                     }
                 } else {
                     Toast.makeText(SignInActivity.this, "验证码错误", Toast.LENGTH_SHORT).show();

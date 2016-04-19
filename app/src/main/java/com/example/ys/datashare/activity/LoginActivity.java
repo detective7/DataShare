@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import com.example.ys.datashare.R;
 import com.example.ys.datashare.tool.JsonPost;
+import com.example.ys.datashare.tool.SharedPreUtil;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
@@ -160,6 +161,9 @@ public class LoginActivity extends Activity {
             Toast.makeText(getApplicationContext(), s, Toast.LENGTH_LONG).show();
             if(success==1){
                 Intent intent = new Intent(LoginActivity.this,MainActivity.class);
+                SharedPreUtil LoginSha = new SharedPreUtil("login");
+                LoginSha.setParam(LoginActivity.this,"xuehao",xuehao);
+                LoginSha.setParam(LoginActivity.this,"mima",mima);
                 LoginActivity.this.startActivity(intent);
                 LoginActivity.this.finish();
             }

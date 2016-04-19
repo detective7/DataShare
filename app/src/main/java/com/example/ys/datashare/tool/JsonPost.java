@@ -22,7 +22,7 @@ import java.util.List;
 
 /**
  * Created by Ys on 2016/4/8.
- * Json 工具类
+ * Json和Http网络请求 工具类
  */
 public class JsonPost {
 
