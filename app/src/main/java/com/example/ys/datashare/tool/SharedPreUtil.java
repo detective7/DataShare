@@ -5,7 +5,7 @@ import android.content.SharedPreferences;
 
 /**
  * Created by Ys on 2016/4/19.
- * <p/>
+ *
  * SharedPreferences工具类，加了个，文件名作为参数
  */
 public class SharedPreUtil {
