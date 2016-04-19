@@ -34,12 +34,14 @@ public class SignInActivity extends Activity {
     private Button zhuCe;
     private static String urlZhuCe = "http://192.168.88.101/testShare/signIn.php";
     private ProgressDialog pDialog;
-    String userNum, password, password_copy, phone;
-    JsonPost jsonParser = new JsonPost();
-    String APPKEY = "11bc365b9eff2";
-    String APPSECRETE = "658f26cd66e813667521d0a915d95b56";
+    private String userNum, password, password_copy, phone;
+    private JsonPost jsonParser = new JsonPost();
+    private String APPKEY = "11bc365b9eff2";
+    private String APPSECRETE = "658f26cd66e813667521d0a915d95b56";
     //倒计时是秒数
-    int i = 30;
+    private int i = 30;
+    //判断输入是否通过，才可注册
+    private boolean pass = false;
 
 
     @Override
@@ -84,8 +86,8 @@ public class SignInActivity extends Activity {
                 userNum = zhuCeXueHao.getText().toString();
                 password = zhuCeMiMa.getText().toString();
                 phone = zhuCeShouJi.getText().toString();
-                if (dataTrue()) {
-                    //new Send().execute();
+                if (dataTrue() && pass) {
+                    new Send().execute();
                 }
             }
         });
@@ -126,7 +128,7 @@ public class SignInActivity extends Activity {
                 } else if ("".equals(password_copy) || password_copy == null) {
                     Toast.makeText(SignInActivity.this, "请再次密码", Toast.LENGTH_SHORT).show();
                 } else if (!password_copy.equals(password)) {
-                    Toast.makeText(SignInActivity.this, "再次密码错误", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SignInActivity.this, "重复密码错误", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -170,6 +172,27 @@ public class SignInActivity extends Activity {
      * @return 判断验证码是否正确
      */
     private boolean dataTrue() {
+        userNum = zhuCeXueHao.getText().toString().trim();
+        password = zhuCeMiMa.getText().toString().trim();
+        password_copy = zhuCeMiMa2.getText().toString().trim();
+        phone = zhuCeShouJi.getText().toString().trim();
+        if (userNum == null || userNum.equals("")) {
+            pass = false;
+            Toast.makeText(SignInActivity.this, "请填写学号", Toast.LENGTH_SHORT).show();
+        } else if (password == null || password.equals("")) {
+            pass = false;
+            Toast.makeText(SignInActivity.this, "请填写密码", Toast.LENGTH_SHORT).show();
+        } else if (password_copy == null || password_copy.equals("")) {
+            pass = false;
+            Toast.makeText(SignInActivity.this, "请填写重复密码", Toast.LENGTH_SHORT).show();
+        } else if (!password_copy.equals(password)) {
+            pass = false;
+            Toast.makeText(SignInActivity.this, "重复密码错误", Toast.LENGTH_SHORT).show();
+        } else if (phone == null || phone.equals("")) {
+            pass = false;
+            Toast.makeText(SignInActivity.this, "手机号不能为空", Toast.LENGTH_SHORT).show();
+        }
+        //TODO 这里非空验证还有有效性验证
         SMSSDK.submitVerificationCode("86", phone, yanZhengMa
                 .getText().toString());
         //TODO 验证码的校验，返回数字3，这里要发一个空handler过去查看msg，服务端有问题，再测
