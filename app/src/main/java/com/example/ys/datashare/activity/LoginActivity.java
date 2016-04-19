@@ -113,9 +113,9 @@ public class LoginActivity extends Activity {
                 } else if ("".equals(mima) || mima == null) {
                     Toast.makeText(LoginActivity.this, "请输入密码", Toast.LENGTH_SHORT).show();
                 }else{
-                    //new Login().execute();
-                    Intent intent = new Intent(LoginActivity.this,MainActivity.class);
-                    LoginActivity.this.startActivity(intent);
+                    new Login().execute();
+//                    Intent intent = new Intent(LoginActivity.this,MainActivity.class);
+//                    LoginActivity.this.startActivity(intent);
                 }
 
             }
@@ -164,6 +164,7 @@ public class LoginActivity extends Activity {
                 SharedPreUtil LoginSha = new SharedPreUtil("login");
                 LoginSha.setParam(LoginActivity.this,"xuehao",xuehao);
                 LoginSha.setParam(LoginActivity.this,"mima",mima);
+                Log.d("abc",xuehao+"   "+mima);
                 LoginActivity.this.startActivity(intent);
                 LoginActivity.this.finish();
             }
