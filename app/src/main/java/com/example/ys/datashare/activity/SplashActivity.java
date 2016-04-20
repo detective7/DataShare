@@ -8,7 +8,11 @@ import android.os.Message;
 
 import com.example.ys.datashare.R;
 import com.example.ys.datashare.tool.SharedPreUtil;
-
+/*
+ *
+ *
+ *
+ */
 public class SplashActivity extends Activity {
 
     private SharedPreUtil isLogin = new SharedPreUtil("login");
