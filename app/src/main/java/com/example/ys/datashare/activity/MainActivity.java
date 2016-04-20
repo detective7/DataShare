@@ -1,17 +1,27 @@
 package com.example.ys.datashare.activity;
 
+import android.app.ProgressDialog;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.Toast;
 
 import com.example.ys.datashare.R;
 import com.example.ys.datashare.presenter.FragmentTabAdapter;
+import com.example.ys.datashare.tool.JsonPost;
+import com.example.ys.datashare.tool.SharedPreUtil;
 import com.example.ys.datashare.view.TabAwork;
 import com.example.ys.datashare.view.TabBmsg;
 import com.example.ys.datashare.view.TabCdata;
 import com.example.ys.datashare.view.TabDmy;
+
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,11 +32,20 @@ public class MainActivity extends FragmentActivity {
     private RadioButton radio;
     private RadioButton wode;
     public List<Fragment> fragments = new ArrayList<Fragment>();
+    private ProgressDialog pDialog;
+    JsonPost jsonParser = new JsonPost();
+    private SharedPreUtil user = new SharedPreUtil("login");
+    String xuehao, mima;
+    String urlGetIn = "http://192.168.88.101/testShare/getin.php";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        //类的实例会比其他语句早运行
+        new CheckXinxi().execute();
+
 
         //添加四个fragment进list
         fragments.add(new TabAwork());
@@ -46,4 +65,50 @@ public class MainActivity extends FragmentActivity {
         });
 
     }
+
+    private class CheckXinxi extends AsyncTask<String, String, String> {
+
+        private int success;
+
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            pDialog = new ProgressDialog(MainActivity.this);
+            pDialog.setMessage("正在登录");
+            pDialog.setIndeterminate(false);
+            pDialog.setCancelable(true);
+            pDialog.show();
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+            List<NameValuePair> args = new ArrayList<NameValuePair>();
+            xuehao = (String) user.getParam(MainActivity.this, "xuehao", "");
+            mima = (String) user.getParam(MainActivity.this, "mima", "");
+            args.add(new BasicNameValuePair("user_num", xuehao));
+            args.add(new BasicNameValuePair("password", mima));
+            try {
+                JSONObject json = jsonParser.makeHttpRequest(urlGetIn, "POST", args);
+                String message = json.getString("message");
+                success = json.getInt("success");
+                Log.d("successJson", json.getString("class") + "-->" + json.getString("statu") + "-->" + json.getString("department"));
+                return message;
+            } catch (Exception e) {
+                e.printStackTrace();
+                return "";
+            }
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            pDialog.dismiss();
+            //doInBackground返回值-->s
+            Toast.makeText(getApplicationContext(), s, Toast.LENGTH_LONG).show();
+            if (success == 1) {
+            }
+        }
+    }
+
 }
