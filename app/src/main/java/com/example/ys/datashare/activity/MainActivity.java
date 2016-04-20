@@ -66,6 +66,9 @@ public class MainActivity extends FragmentActivity {
 
     }
 
+    /**
+    * 查询账号相关信息
+    */
     private class CheckXinxi extends AsyncTask<String, String, String> {
 
         private int success;
