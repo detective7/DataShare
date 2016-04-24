@@ -161,16 +161,20 @@ public class LoginActivity extends Activity {
             super.onPostExecute(s);
             pDialog.dismiss();
             //doInBackground返回值-->s
-            Toast.makeText(getApplicationContext(), s, Toast.LENGTH_LONG).show();
             if(success==1){
-                Intent intent = new Intent(LoginActivity.this,MainActivity.class);
-                SharedPreUtil LoginSha = new SharedPreUtil("login");
-                LoginSha.setParam(LoginActivity.this,"xuehao",xuehao);
-                LoginSha.setParam(LoginActivity.this,"mima",mima);
-                LoginSha.setParam(LoginActivity.this,"statu",statu);
-                Log.d("abc",xuehao+"   "+mima);
-                LoginActivity.this.startActivity(intent);
-                LoginActivity.this.finish();
+                if (statu == 2) {
+                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                    SharedPreUtil LoginSha = new SharedPreUtil("login");
+                    LoginSha.setParam(LoginActivity.this, "xuehao", xuehao);
+                    LoginSha.setParam(LoginActivity.this, "mima", mima);
+                    LoginSha.setParam(LoginActivity.this, "statu", statu);
+                    Log.d("abc", xuehao + "   " + mima);
+                    Toast.makeText(getApplicationContext(), s, Toast.LENGTH_LONG).show();
+                    LoginActivity.this.startActivity(intent);
+                    LoginActivity.this.finish();
+                }else if(statu == 1){
+                    Toast.makeText(LoginActivity.this, "请选择教师版APP", Toast.LENGTH_LONG).show();
+                }
             }
         }
     }

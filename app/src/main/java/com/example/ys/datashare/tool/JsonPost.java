@@ -9,6 +9,7 @@ import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.protocol.HTTP;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -45,6 +46,9 @@ public class JsonPost {
             DefaultHttpClient httpClient = new DefaultHttpClient();
             HttpPost httpPost = new HttpPost(url);
             httpPost.setEntity(new UrlEncodedFormEntity(params, HTTP.UTF_8));
+            //设置超时，3秒连接不到即为超时
+            HttpConnectionParams.setConnectionTimeout(httpClient.getParams(), 3000);
+            HttpConnectionParams.setSoTimeout(httpClient.getParams(), 3000);
             HttpResponse httpResponse = httpClient.execute(httpPost);
             HttpEntity httpEntity = httpResponse.getEntity();
             is = httpEntity.getContent();

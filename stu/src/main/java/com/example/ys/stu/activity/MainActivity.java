@@ -1,7 +1,6 @@
 package com.example.ys.stu.activity;
 
 import android.app.ProgressDialog;
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -51,7 +50,6 @@ public class MainActivity extends FragmentActivity {
         statu = (int) user.getParam(MainActivity.this, "statu", 4);
         Log.d("sbc",statu+"");
 
-        if (statu == 2) {
             //添加四个fragment进list
             fragments.add(new TabAwork());
             fragments.add(new TabBmsg());
@@ -68,14 +66,6 @@ public class MainActivity extends FragmentActivity {
 
                 }
             });
-        } else if(statu==1){
-            Toast.makeText(MainActivity.this,"请选择老师版APP",Toast.LENGTH_LONG);
-        }else {
-            Intent intent = new Intent(MainActivity.this,LoginActivity.class);
-            MainActivity.this.startActivity(intent);
-            MainActivity.this.finish();
-        }
-
 
     }
 

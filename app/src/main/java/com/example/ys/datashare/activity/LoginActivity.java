@@ -37,7 +37,7 @@ public class LoginActivity extends Activity {
     private Button login_bt;
     private ProgressDialog pDialog;
     JsonPost jsonParser = new JsonPost();
-    private static String urlDenglu = Constant.MYURL+"login.php";
+    private static String urlDenglu = Constant.MYURL + "login.php";
     Login login;
 
     @Override
@@ -113,7 +113,7 @@ public class LoginActivity extends Activity {
                     Toast.makeText(LoginActivity.this, "请输入学号", Toast.LENGTH_SHORT).show();
                 } else if ("".equals(mima) || mima == null) {
                     Toast.makeText(LoginActivity.this, "请输入密码", Toast.LENGTH_SHORT).show();
-                }else{
+                } else {
                     new Login().execute();
 //                    Intent intent = new Intent(LoginActivity.this,MainActivity.class);
 //                    LoginActivity.this.startActivity(intent);
@@ -127,6 +127,7 @@ public class LoginActivity extends Activity {
 
         private int success;
         private int statu;
+        private String message;
 
         @Override
         protected void onPreExecute() {
@@ -144,13 +145,13 @@ public class LoginActivity extends Activity {
             args.add(new BasicNameValuePair("user_num", xuehao));
             args.add(new BasicNameValuePair("password", mima));
             try {
-                JSONObject json = jsonParser.makeHttpRequest(urlDenglu, "POST",args);
-                String message = json.getString("message");
+                JSONObject json = jsonParser.makeHttpRequest(urlDenglu, "POST", args);
+                message = json.getString("message");
                 success = json.getInt("success");
                 statu = json.getInt("statu");
-                Log.d("success",success+"");
+                Log.d("success", success + "");
                 return message;
-            }catch(Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
                 return "";
             }
@@ -161,16 +162,22 @@ public class LoginActivity extends Activity {
             super.onPostExecute(s);
             pDialog.dismiss();
             //doInBackground返回值-->s
-            Toast.makeText(getApplicationContext(), s, Toast.LENGTH_LONG).show();
-            if(success==1){
-                Intent intent = new Intent(LoginActivity.this,MainActivity.class);
-                SharedPreUtil LoginSha = new SharedPreUtil("login");
-                LoginSha.setParam(LoginActivity.this,"xuehao",xuehao);
-                LoginSha.setParam(LoginActivity.this,"mima",mima);
-                LoginSha.setParam(LoginActivity.this,"statu",statu);
-                Log.d("abc",xuehao+"   "+mima);
-                LoginActivity.this.startActivity(intent);
-                LoginActivity.this.finish();
+            if (success == 1) {
+                if (statu == 1) {
+                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                    SharedPreUtil LoginSha = new SharedPreUtil("login");
+                    LoginSha.setParam(LoginActivity.this, "xuehao", xuehao);
+                    LoginSha.setParam(LoginActivity.this, "mima", mima);
+                    LoginSha.setParam(LoginActivity.this, "statu", statu);
+                    Log.d("abc", xuehao + "   " + mima);
+                    Toast.makeText(getApplicationContext(), s, Toast.LENGTH_SHORT).show();
+                    LoginActivity.this.startActivity(intent);
+                    LoginActivity.this.finish();
+                } else if (statu == 2) {
+                    Toast.makeText(LoginActivity.this, "请选择学生版APP", Toast.LENGTH_LONG).show();
+                }
+            }else {
+                Toast.makeText(getApplicationContext(), s, Toast.LENGTH_SHORT).show();
             }
         }
     }
