@@ -6,10 +6,12 @@
     </shape>
 </item>
 <item
-    android:bottom="1.5dp"
-    android:top="0dp">
+    android:bottom="1dp"
+    android:top="1dp"
+    android:left="1dp"
+    android:right="1dp">
     <shape>
-        <solid android:color="#ffffff" />
+        <solid android:color="#DD448a98" />
     </shape>
 </item>
 </layer-list>

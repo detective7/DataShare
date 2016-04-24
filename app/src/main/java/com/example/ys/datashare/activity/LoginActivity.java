@@ -16,6 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.ys.datashare.R;
+import com.example.ys.datashare.config.Constant;
 import com.example.ys.datashare.tool.JsonPost;
 import com.example.ys.datashare.tool.SharedPreUtil;
 
@@ -36,7 +37,7 @@ public class LoginActivity extends Activity {
     private Button login_bt;
     private ProgressDialog pDialog;
     JsonPost jsonParser = new JsonPost();
-    private static String urlDenglu = "http://192.168.88.101/testShare/login.php";
+    private static String urlDenglu = Constant.MYURL+"login.php";
     Login login;
 
     @Override

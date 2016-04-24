@@ -11,6 +11,7 @@ import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import com.example.ys.datashare.R;
+import com.example.ys.datashare.config.Constant;
 import com.example.ys.datashare.presenter.FragmentTabAdapter;
 import com.example.ys.datashare.tool.JsonPost;
 import com.example.ys.datashare.tool.SharedPreUtil;
@@ -36,7 +37,7 @@ public class MainActivity extends FragmentActivity {
     JsonPost jsonParser = new JsonPost();
     private SharedPreUtil user = new SharedPreUtil("login");
     String xuehao, mima;
-    String urlGetIn = "http://192.168.88.101/testShare/getin.php";
+    String urlGetIn = Constant.MYURL+"getin.php";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

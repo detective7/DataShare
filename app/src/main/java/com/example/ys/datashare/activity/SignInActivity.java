@@ -15,6 +15,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.ys.datashare.R;
+import com.example.ys.datashare.config.Constant;
 import com.example.ys.datashare.tool.JsonPost;
 
 import org.apache.http.NameValuePair;
@@ -32,7 +33,7 @@ public class SignInActivity extends Activity {
     private TextView zhuCeBack, faSongYanZheng;
     private EditText zhuCeXueHao, zhuCeMiMa, zhuCeMiMa2, zhuCeShouJi, yanZhengMa;
     private Button zhuCe;
-    private static String urlZhuCe = "http://192.168.88.101/testShare/signIn.php";
+    private static String urlZhuCe = Constant.MYURL+"signIn.php";
     private ProgressDialog pDialog;
     private String userNum, password, password_copy, phone;
     private JsonPost jsonParser = new JsonPost();
