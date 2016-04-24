@@ -5,7 +5,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
-import android.util.Log;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
@@ -34,10 +33,11 @@ public class MainActivity extends FragmentActivity {
     private RadioButton wode;
     public List<Fragment> fragments = new ArrayList<Fragment>();
     private ProgressDialog pDialog;
-    JsonPost jsonParser = new JsonPost();
+    private JsonPost jsonParser = new JsonPost();
     private SharedPreUtil user = new SharedPreUtil("login");
-    String xuehao, mima;
-    String urlGetIn = Constant.MYURL+"getin.php";
+    private String xuehao, mima;
+    private String urlGetIn = Constant.MYURL+"getin.php";
+    private int statu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,7 +46,7 @@ public class MainActivity extends FragmentActivity {
 
         //类的实例会比其他语句早运行
         new CheckXinxi().execute();
-
+        statu =  (int)user.getParam(MainActivity.this,"statu",4);
 
         //添加四个fragment进list
         fragments.add(new TabAwork());
@@ -96,7 +96,7 @@ public class MainActivity extends FragmentActivity {
                 JSONObject json = jsonParser.makeHttpRequest(urlGetIn, "POST", args);
                 String message = json.getString("message");
                 success = json.getInt("success");
-                Log.d("successJson", json.getString("class") + "-->" + json.getString("statu") + "-->" + json.getString("department"));
+//                Log.d("successJson", json.getString("class") + "-->" + json.getString("statu") + "-->" + json.getString("department"));
                 return message;
             } catch (Exception e) {
                 e.printStackTrace();

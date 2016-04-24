@@ -126,6 +126,7 @@ public class LoginActivity extends Activity {
     private class Login extends AsyncTask<String, String, String> {
 
         private int success;
+        private int statu;
 
         @Override
         protected void onPreExecute() {
@@ -146,6 +147,7 @@ public class LoginActivity extends Activity {
                 JSONObject json = jsonParser.makeHttpRequest(urlDenglu, "POST",args);
                 String message = json.getString("message");
                 success = json.getInt("success");
+                statu = json.getInt("statu");
                 Log.d("success",success+"");
                 return message;
             }catch(Exception e){
@@ -165,6 +167,7 @@ public class LoginActivity extends Activity {
                 SharedPreUtil LoginSha = new SharedPreUtil("login");
                 LoginSha.setParam(LoginActivity.this,"xuehao",xuehao);
                 LoginSha.setParam(LoginActivity.this,"mima",mima);
+                LoginSha.setParam(LoginActivity.this,"statu",statu);
                 Log.d("abc",xuehao+"   "+mima);
                 LoginActivity.this.startActivity(intent);
                 LoginActivity.this.finish();
