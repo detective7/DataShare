@@ -1,10 +1,12 @@
 package com.example.ys.datashare.activity;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
@@ -36,7 +38,7 @@ public class MainActivity extends FragmentActivity {
     private JsonPost jsonParser = new JsonPost();
     private SharedPreUtil user = new SharedPreUtil("login");
     private String xuehao, mima;
-    private String urlGetIn = Constant.MYURL+"getin.php";
+    private String urlGetIn = Constant.MYURL + "getin.php";
     private int statu;
 
     @Override
@@ -46,30 +48,40 @@ public class MainActivity extends FragmentActivity {
 
         //类的实例会比其他语句早运行
         new CheckXinxi().execute();
-        statu =  (int)user.getParam(MainActivity.this,"statu",4);
+        statu = (int) user.getParam(MainActivity.this, "statu", 4);
+        Log.d("sbc",statu+"");
 
-        //添加四个fragment进list
-        fragments.add(new TabAwork());
-        fragments.add(new TabBmsg());
-        fragments.add(new TabCdata());
-        fragments.add(new TabDmy());
-        rgs = (RadioGroup) findViewById(R.id.tabs_RG);
-        radio = (RadioButton) findViewById(R.id.tab_rb_a);
-        radio.setChecked(true);
-        //再将list添加进Adapter
-        FragmentTabAdapter tabAdapter = new FragmentTabAdapter(this, fragments, R.id.tab_content, rgs);
-        tabAdapter.setOnRgsExtraCheckedChangedListener(new FragmentTabAdapter.OnRgsExtraCheckedChangedListener() {
-            @Override
-            public void OnRgsExtraCheckedChanged(RadioGroup radioGroup, int checkedId, int index) {
+        if (statu == 1) {
+            //添加四个fragment进list
+            fragments.add(new TabAwork());
+            fragments.add(new TabBmsg());
+            fragments.add(new TabCdata());
+            fragments.add(new TabDmy());
+            rgs = (RadioGroup) findViewById(R.id.tabs_RG);
+            radio = (RadioButton) findViewById(R.id.tab_rb_a);
+            radio.setChecked(true);
+            //再将list添加进Adapter
+            FragmentTabAdapter tabAdapter = new FragmentTabAdapter(this, fragments, R.id.tab_content, rgs);
+            tabAdapter.setOnRgsExtraCheckedChangedListener(new FragmentTabAdapter.OnRgsExtraCheckedChangedListener() {
+                @Override
+                public void OnRgsExtraCheckedChanged(RadioGroup radioGroup, int checkedId, int index) {
 
-            }
-        });
+                }
+            });
+        } else if(statu==2){
+            Toast.makeText(MainActivity.this,"请选择学生版APP",Toast.LENGTH_LONG);
+        }else {
+            Intent intent = new Intent(MainActivity.this,LoginActivity.class);
+            MainActivity.this.startActivity(intent);
+            MainActivity.this.finish();
+        }
+
 
     }
 
     /**
-    * 查询账号相关信息
-    */
+     * 查询账号相关信息
+     */
     private class CheckXinxi extends AsyncTask<String, String, String> {
 
         private int success;
