@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/backg_gs"
+    tools:context="com.example.ys.stu.activity.LoginActivity">
+
+    <LinearLayout
+        android:id="@+id/shuRu"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="220dp"
+        android:background="@drawable/loginyuanjiao"
+        android:minHeight="110dp"
+        android:orientation="vertical">
+
+        <EditText
+            android:id="@+id/xueHao"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="#00FFFFFF"
+            android:hint="学号/教师号"
+            android:numeric="integer"
+            android:padding="18dp"
+            android:textColor="@color/ziTi"
+            android:textColorHint="@color/ziTi"
+            android:textSize="18dp" />
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical">
+
+            <EditText
+                android:id="@+id/miMa"
+                android:layout_width="280dp"
+                android:layout_height="wrap_content"
+                android:background="#00FFFFFF"
+                android:hint="密码"
+                android:inputType="textPassword"
+                android:padding="18dp"
+                android:textColor="@color/ziTi"
+                android:textColorHint="@color/ziTi"
+                android:textSize="18dp" />
+
+            <ImageView
+                android:id="@+id/canSee"
+                android:layout_margin="10dp"
+                android:layout_alignParentRight="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/eye_an" />
+        </RelativeLayout>
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/login"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/shuRu"
+        android:layout_marginBottom="50dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/loginyuanjiao"
+        android:padding="12dp"
+        android:text="登录"
+        android:textColor="@color/ziTi"
+        android:textSize="18dp"></Button>
+
+    <TextView
+        android:id="@+id/zhuCe"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/login"
+        android:layout_alignStart="@+id/login"
+        android:layout_alignTop="@+id/login"
+        android:layout_marginLeft="29dp"
+        android:layout_marginStart="29dp"
+        android:layout_marginTop="56dp"
+        android:text="注册"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="@color/qianZiTi"
+        android:textSize="18dp" />
+
+    <TextView
+        android:id="@+id/wangJiMiMa"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/zhuCe"
+        android:layout_marginLeft="19dp"
+        android:layout_marginStart="19dp"
+        android:layout_toEndOf="@+id/zhuCe"
+        android:layout_toRightOf="@+id/zhuCe"
+        android:text="忘记密码?"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="@color/qianZiTi"
+        android:textSize="18dp" />
+</RelativeLayout>
