@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.example.ys.datashare.R;
 import com.example.ys.datashare.activity.LoginActivity;
 import com.example.ys.datashare.activity.MainActivity;
+import com.example.ys.datashare.tool.SharedPreUtil;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -47,7 +48,8 @@ public class TabDmy extends Fragment {
         signOut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                SharedPreUtil sharePer = new SharedPreUtil("login");
+                sharePer.deleParam(main);
                 Intent intent = new Intent(main, LoginActivity.class);
                 main.startActivity(intent);
                 getActivity().finish();

@@ -5,7 +5,7 @@ import android.content.SharedPreferences;
 
 /**
  * Created by Ys on 2016/4/19.
- *
+ * <p>
  * SharedPreferences工具类，加了个，文件名作为参数
  */
 public class SharedPreUtil {
@@ -48,7 +48,7 @@ public class SharedPreUtil {
 
 
     /**
-     * 得到保存数据的方法，我们根据默认值得到保存的数据的具体类型，然后调用相对于的方法获取值
+     * 取出数据的方法，我们根据默认值得到保存的数据的具体类型，然后调用相对于的方法获取值
      *
      * @param context
      * @param key
@@ -73,4 +73,16 @@ public class SharedPreUtil {
 
         return null;
     }
+
+    /**
+     * 删除数据的方法
+     */
+    public static void deleParam(Context context) {
+
+        SharedPreferences sp = context.getSharedPreferences(file_name, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.clear();
+        editor.commit();
+    }
+
 }

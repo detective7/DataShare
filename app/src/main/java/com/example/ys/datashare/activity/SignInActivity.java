@@ -88,6 +88,7 @@ public class SignInActivity extends Activity {
                 userNum = zhuCeXueHao.getText().toString();
                 password = zhuCeMiMa.getText().toString();
                 phone = zhuCeShouJi.getText().toString();
+                //TODO 这里只是测试时候这么设置，检测时候重新申请
 //                if (dataTrue() && SmsPass) {
                 if (dataTrue()) {
                     new Send().execute();
