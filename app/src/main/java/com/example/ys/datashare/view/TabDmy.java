@@ -1,18 +1,26 @@
 package com.example.ys.datashare.view;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.example.ys.datashare.R;
+import com.example.ys.datashare.activity.LoginActivity;
+import com.example.ys.datashare.activity.MainActivity;
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class TabDmy extends Fragment {
+
+    private View view;
+    private TextView signOut;
+    private MainActivity main;
 
 
     public TabDmy() {
@@ -23,8 +31,28 @@ public class TabDmy extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.tab_d_my, container, false);
+        view = inflater.inflate(R.layout.tab_d_my, container, false);
+        main = (MainActivity) getActivity();
+        initView();
+        initEvent();
+        return view;
+    }
+
+    private void initView() {
+        signOut = (TextView)view.findViewById(R.id.signOut);
+
+    }
+
+    private void initEvent() {
+        signOut.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent intent = new Intent(main, LoginActivity.class);
+                main.startActivity(intent);
+                getActivity().finish();
+            }
+        });
     }
 
 }

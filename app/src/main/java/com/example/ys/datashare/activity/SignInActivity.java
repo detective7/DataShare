@@ -88,7 +88,8 @@ public class SignInActivity extends Activity {
                 userNum = zhuCeXueHao.getText().toString();
                 password = zhuCeMiMa.getText().toString();
                 phone = zhuCeShouJi.getText().toString();
-                if (dataTrue() && SmsPass) {
+//                if (dataTrue() && SmsPass) {
+                if (dataTrue()) {
                     new Send().execute();
                 }
             }
@@ -105,7 +106,6 @@ public class SignInActivity extends Activity {
                 } else {
                     // TODO 验证学号是否存在已经放在点击注册那里，有空再完成这里，异步有两次连接
                 }
-
             }
         });
 
@@ -138,35 +138,34 @@ public class SignInActivity extends Activity {
         faSongYanZheng.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dataTrue();
-                phone = zhuCeShouJi.getText().toString();
-                // 1. 通过规则判断手机号
-                if (!judgePhoneNums(phone)) {
-                    return;
-                } // 2. 通过sdk发送短信验证
-                SMSSDK.getVerificationCode("86", phone);
-
-                // 3. 把按钮变成不可点击，并且显示倒计时（正在获取）
-                faSongYanZheng.setClickable(false);
-                faSongYanZheng.setText("重新发送(" + i + ")");
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        for (; i > 0; i--) {
-                            handler.sendEmptyMessage(-9);
-                            if (i <= 0) {
-                                break;
+                if (dataTrue()) {
+                    phone = zhuCeShouJi.getText().toString();
+                    // 1. 通过规则判断手机号
+                    if (!judgePhoneNums(phone)) {
+                        return;
+                    } // 2. 通过sdk发送短信验证
+                    SMSSDK.getVerificationCode("86", phone);
+                    // 3. 把按钮变成不可点击，并且显示倒计时（正在获取）
+                    faSongYanZheng.setClickable(false);
+                    faSongYanZheng.setText("重新发送(" + i + ")");
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            for (; i > 0; i--) {
+                                handler.sendEmptyMessage(-9);
+                                if (i <= 0) {
+                                    break;
+                                }
+                                try {
+                                    Thread.sleep(1000);
+                                } catch (InterruptedException e) {
+                                    e.printStackTrace();
+                                }
                             }
-                            try {
-                                Thread.sleep(1000);
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
+                            handler.sendEmptyMessage(-8);
                         }
-                        handler.sendEmptyMessage(-8);
-                    }
-                }).start();
-
+                    }).start();
+                }
             }
         });
     }
@@ -201,6 +200,8 @@ public class SignInActivity extends Activity {
 
     private class Send extends AsyncTask<String, String, String> {
 
+        private int success = 5;
+
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
@@ -219,6 +220,7 @@ public class SignInActivity extends Activity {
             args.add(new BasicNameValuePair("phone", phone));
             try {
                 JSONObject json = jsonParser.makeHttpRequest(urlZhuCe, "POST", args);
+                success = json.getInt("success");
                 String message = json.getString("message");
                 return message;
             } catch (Exception e) {
@@ -232,7 +234,12 @@ public class SignInActivity extends Activity {
             super.onPostExecute(s);
             pDialog.dismiss();
             //doInBackground返回值-->s
-            //Toast.makeText(getApplicationContext(), s, Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), s, Toast.LENGTH_LONG).show();
+            if (success == 0) {
+                Intent intent = new Intent(SignInActivity.this, MainActivity.class);
+                SignInActivity.this.startActivity(intent);
+                SignInActivity.this.finish();
+            }
         }
     }
 
@@ -281,7 +288,6 @@ public class SignInActivity extends Activity {
             return mobileNums.matches(telRegex);
     }
 
-
     /**
      * 消息处理
      */
@@ -303,12 +309,8 @@ public class SignInActivity extends Activity {
                     if (event == SMSSDK.EVENT_SUBMIT_VERIFICATION_CODE) {//提交验证码成功,验证通过
                         SmsPass = true;
                         Toast.makeText(getApplicationContext(), "验证码校验成功", Toast.LENGTH_SHORT).show();
-                        Intent intent = new Intent(SignInActivity.this,MainActivity.class);
-                        SignInActivity.this.startActivity(intent);
-                        SignInActivity.this.finish();
                     } else if (event == SMSSDK.EVENT_GET_VERIFICATION_CODE) {//服务器验证码发送成功
                         Toast.makeText(getApplicationContext(), "验证码已经发送", Toast.LENGTH_SHORT).show();
-
                     }
                 } else {
                     Toast.makeText(SignInActivity.this, "验证码错误", Toast.LENGTH_SHORT).show();
