@@ -48,7 +48,6 @@ public class MainActivity extends FragmentActivity {
         //类的实例会比其他语句早运行
         new CheckXinxi().execute();
         statu = (int) user.getParam(MainActivity.this, "statu", 4);
-        Log.d("sbc",statu+"");
 
             //添加四个fragment进list
             fragments.add(new TabAwork());
@@ -100,7 +99,9 @@ public class MainActivity extends FragmentActivity {
                 JSONObject json = jsonParser.makeHttpRequest(urlGetIn, "POST", args);
                 String message = json.getString("message");
                 success = json.getInt("success");
-//                Log.d("successJson", json.getString("class") + "-->" + json.getString("statu") + "-->" + json.getString("department"));
+                //Log.d("successJson", json.getString("class") + "-->" + json.getString("statu") + "-->" + json.getString("department"));
+//                Log.d("successJson", json.getString("allClass"));
+                user.setParam(MainActivity.this,"allClass",json.getString("allClass"));
                 return message;
             } catch (Exception e) {
                 e.printStackTrace();
@@ -113,7 +114,7 @@ public class MainActivity extends FragmentActivity {
             super.onPostExecute(s);
             pDialog.dismiss();
             //doInBackground返回值-->s
-            Toast.makeText(getApplicationContext(), s, Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), s, Toast.LENGTH_SHORT).show();
             if (success == 1) {
             }
         }
