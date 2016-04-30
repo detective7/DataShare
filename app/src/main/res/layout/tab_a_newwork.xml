@@ -135,7 +135,7 @@
         android:layout_toRightOf="@id/nwtv5"
         android:layout_alignBottom="@+id/nwtv5"
         android:layout_alignTop="@+id/nwtv5"
-        android:textSize="18dp" />
+        android:textSize="16dp" />
 
     <Button
         android:layout_width="60dp"

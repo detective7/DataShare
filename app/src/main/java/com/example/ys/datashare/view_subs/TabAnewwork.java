@@ -1,6 +1,7 @@
 package com.example.ys.datashare.view_subs;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -13,8 +14,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.ys.datashare.R;
+import com.example.ys.datashare.activity.FileFinderActivity;
 import com.example.ys.datashare.config.Constant;
 import com.example.ys.datashare.tool.SharedPreUtil;
 import com.squareup.okhttp.Call;
@@ -40,6 +43,8 @@ public class TabAnewwork extends Fragment {
     private String urlUpLode = Constant.MYURL + "uplode.php";
     private SharedPreUtil share = new SharedPreUtil("login");
     private View mainview;
+
+    private static int REQUESTCODE=11;
 
 
     public TabAnewwork() {
@@ -115,9 +120,20 @@ public class TabAnewwork extends Fragment {
         material.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Intent intent = new Intent(getActivity(),FileFinderActivity.class);
+                startActivityForResult(intent,REQUESTCODE);
             }
         });
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode== TabAnewwork.REQUESTCODE&&resultCode==getActivity().RESULT_OK){
+            String filename=data.getStringExtra("filename");
+            String filepath=data.getStringExtra("filepath");
+            Toast.makeText(getActivity(),filepath,Toast.LENGTH_SHORT).show();
+            material.setText(filename);
+        }
+    }
 }
