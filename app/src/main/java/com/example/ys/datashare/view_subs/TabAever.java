@@ -33,17 +33,16 @@ public class TabAever extends Fragment {
     private String[] allClass;
 
     private View mainView;
-    private static String urlYiFaBu = Constant.MYURL+"yifabu.php";
+    private static String urlYiFaBu = Constant.MYURL + "yifabu.php";
     private Message message;
 
-    private Handler handler = new Handler(){
+    private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
 
         }
     };
-
 
 
     public TabAever() {
@@ -65,13 +64,13 @@ public class TabAever extends Fragment {
 
         //获取班级列表
         FormEncodingBuilder builder = new FormEncodingBuilder();
-        builder.add("forwhat","class");
+        builder.add("forwhat", "class");
 
         request = new Request.Builder()
                 .url(urlYiFaBu)
                 .post(builder.build())
                 .build();
-        okHttpClient.newCall(request).enqueue(new Callback(){
+        okHttpClient.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Request request, IOException e) {
 
@@ -82,7 +81,7 @@ public class TabAever extends Fragment {
                 allClass = response.body().string().split(";");
                 //以下这段处理不能放在放回里面，逻辑错误
                 // 建立Adapter并且绑定数据源
-                ArrayAdapter<String> _Adapter=new ArrayAdapter<String>(getActivity(),android.R.layout.simple_spinner_item, allClass);
+                ArrayAdapter<String> _Adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, allClass);
                 //绑定 Adapter到控件
 //                select_class.setAdapter(_Adapter);
             }
@@ -91,6 +90,38 @@ public class TabAever extends Fragment {
     }
 
     private void initEvent() {
+    }
+
+    class myThread implements Runnable {
+
+        @Override
+        public void run() {
+//            okHttpClient = new OkHttpClient();
+//
+//            FormEncodingBuilder builder = new FormEncodingBuilder();
+//            builder.add("forwhat", "class");
+//
+//            request = new Request.Builder()
+//                    .url(urlYiFaBu)
+//                    .post(builder.build())
+//                    .build();
+//            okHttpClient.newCall(request).enqueue(new Callback() {
+//                @Override
+//                public void onFailure(Request request, IOException e) {
+//
+//                }
+//
+//                @Override
+//                public void onResponse(Response response) throws IOException {
+//                    allClass = response.body().string().split(";");
+//                    //以下这段处理不能放在放回里面，逻辑错误
+//                    // 建立Adapter并且绑定数据源
+//                    HomeworkAdapter _Adapter = new HomeworkAdapter(getActivity(),);
+//                    //绑定 Adapter到控件
+//                }
+//            });
+
+        }
     }
 
 

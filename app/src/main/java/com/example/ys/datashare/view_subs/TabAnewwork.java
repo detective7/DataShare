@@ -21,9 +21,20 @@ import com.example.ys.datashare.activity.FileFinderActivity;
 import com.example.ys.datashare.config.Constant;
 import com.example.ys.datashare.tool.SharedPreUtil;
 import com.squareup.okhttp.Call;
+import com.squareup.okhttp.Callback;
+import com.squareup.okhttp.Headers;
+import com.squareup.okhttp.MediaType;
+import com.squareup.okhttp.MultipartBuilder;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
+import com.squareup.okhttp.RequestBody;
 import com.squareup.okhttp.Response;
+
+import java.io.File;
+import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -43,8 +54,12 @@ public class TabAnewwork extends Fragment {
     private String urlUpLode = Constant.MYURL + "uplode.php";
     private SharedPreUtil share = new SharedPreUtil("login");
     private View mainview;
+    private String filename, filepath;
 
-    private static int REQUESTCODE=11;
+    private int tedId;
+    private String toClass, title, content, time;
+
+    private static int REQUESTCODE = 11;
 
 
     public TabAnewwork() {
@@ -95,21 +110,22 @@ public class TabAnewwork extends Fragment {
 
     private void initVIew() {
         select_class = (Spinner) mainview.findViewById(R.id.spinner);
-        work_title = (EditText)mainview.findViewById(R.id.work_title);
-        work_content = (EditText)mainview.findViewById(R.id.work_content);
-        material = (TextView)mainview.findViewById(R.id.work_material);
+        work_title = (EditText) mainview.findViewById(R.id.work_title);
+        work_content = (EditText) mainview.findViewById(R.id.work_content);
+        material = (TextView) mainview.findViewById(R.id.work_material);
     }
 
     private void initEvent() {
 
-        String allC = (String)share.getParam(getActivity(),"allClass","");
+        String allC = (String) share.getParam(getActivity(), "allClass", "");
         allClass = allC.split(";");
         ArrayAdapter<String> _Adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, allClass);
         select_class.setAdapter(_Adapter);
         select_class.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                Log.d("abc", (String)select_class.getSelectedItem());
+                toClass = (String) select_class.getSelectedItem();
+                Log.d("abc", (String) select_class.getSelectedItem());
             }
 
             @Override
@@ -120,8 +136,8 @@ public class TabAnewwork extends Fragment {
         material.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(),FileFinderActivity.class);
-                startActivityForResult(intent,REQUESTCODE);
+                Intent intent = new Intent(getActivity(), FileFinderActivity.class);
+                startActivityForResult(intent, REQUESTCODE);
             }
         });
     }
@@ -129,11 +145,77 @@ public class TabAnewwork extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode== TabAnewwork.REQUESTCODE&&resultCode==getActivity().RESULT_OK){
-            String filename=data.getStringExtra("filename");
-            String filepath=data.getStringExtra("filepath");
-            Toast.makeText(getActivity(),filepath,Toast.LENGTH_SHORT).show();
+        if (requestCode == TabAnewwork.REQUESTCODE && resultCode == getActivity().RESULT_OK) {
+            filename = data.getStringExtra("filename");
+            filepath = data.getStringExtra("filepath");
+            Toast.makeText(getActivity(), filepath, Toast.LENGTH_SHORT).show();
             material.setText(filename);
+        }
+    }
+
+    class myThread implements Runnable {
+
+        @Override
+        public void run() {
+            tedId = (int) share.getParam(getActivity(), "xuehao", 0);
+            title = work_title.getText().toString();
+            content = work_content.getText().toString();
+            Date date = new Date();
+            //format的格式可以任意
+            DateFormat sdf = new SimpleDateFormat("MM/dd HH:mm");
+            time = sdf.format(date);
+            if (toClass != null && title!=null) {
+
+                File file = new File(filepath);
+                RequestBody fileBody = RequestBody.create(MediaType.parse("application/octet-stream"), file);
+                RequestBody requestBody = new MultipartBuilder()
+                        .type(MultipartBuilder.FORM)
+                        .addPart(Headers.of(
+                                "Content-Disposition",
+                                "form-data;name=\"ted_id\""),
+                                RequestBody.create(null, tedId + ""))
+                        .addPart(Headers.of(
+                                "Content-Disposition",
+                                "form-data;name=\"toClass\""),
+                                RequestBody.create(null, toClass))
+                        .addPart(Headers.of(
+                                "Content-Disposition",
+                                "form-data;name=\"title\""),
+                                RequestBody.create(null, title))
+                        .addPart(Headers.of(
+                                "Content-Disposition",
+                                "form-data;name=\"content\""),
+                                RequestBody.create(null, content))
+                        .addPart(Headers.of(
+                                "Content-Disposition",
+                                "form-data;name=\"time\""),
+                                RequestBody.create(null, time))
+                        .addPart(Headers.of(
+                                "Content-Disposition",
+                                "form-data; name=\"file\""), fileBody)
+                        .build();
+
+                Request request = new Request.Builder()
+                        .url(urlUpLode)
+                        .post(requestBody)
+                        .build();
+
+                okHttpClient = new OkHttpClient();
+
+                Call call = okHttpClient.newCall(request);
+                call.enqueue(new Callback() {
+                    @Override
+                    public void onFailure(Request request, IOException e) {
+
+                    }
+
+                    @Override
+                    public void onResponse(Response response) throws IOException {
+
+                    }
+                });
+
+            }
         }
     }
 }
