@@ -1,11 +1,14 @@
 package com.example.ys.datashare.view_subs;
 
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,6 +23,7 @@ import android.widget.Toast;
 
 import com.example.ys.datashare.R;
 import com.example.ys.datashare.activity.FileFinderActivity;
+import com.example.ys.datashare.activity.MainActivity;
 import com.example.ys.datashare.config.Constant;
 import com.example.ys.datashare.tool.SharedPreUtil;
 import com.squareup.okhttp.Call;
@@ -60,16 +64,11 @@ public class TabAnewwork extends Fragment {
 
     private String tedId;
     private String toClass, title, content, time;
-    private Handler handler = new Handler(){
-        @Override
-        public void handleMessage(Message msg) {
-            if(msg.what==0){
-                Toast.makeText(getActivity(), "失败", Toast.LENGTH_SHORT).show();
-            }else if(msg.what==1){
-                Toast.makeText(getActivity(), "成功", Toast.LENGTH_SHORT).show();
-            }
-        }
-    };
+    Date date;
+    DateFormat sdf;
+    MyThread testThread;
+    private Handler handler;
+
 
     private static int REQUESTCODE = 11;
 
@@ -121,11 +120,13 @@ public class TabAnewwork extends Fragment {
     }
 
     private void initVIew() {
+        testThread = new MyThread();
+        testThread.start();
         select_class = (Spinner) mainview.findViewById(R.id.spinner);
         work_title = (EditText) mainview.findViewById(R.id.work_title);
         work_content = (EditText) mainview.findViewById(R.id.work_content);
         material = (TextView) mainview.findViewById(R.id.work_material);
-        upload = (Button)mainview.findViewById(R.id.uplodeButton);
+        upload = (Button) mainview.findViewById(R.id.uplodeButton);
     }
 
     private void initEvent() {
@@ -156,8 +157,78 @@ public class TabAnewwork extends Fragment {
         upload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                myThread uplodeThread = new myThread();
-                uplodeThread.start();
+                tedId = (String) share.getParam(getActivity(), "xuehao", "");
+                title = work_title.getText().toString();
+                content = work_content.getText().toString();
+                date = new Date();
+                //format的格式可以任意
+                sdf = new SimpleDateFormat("MM/dd HH:mm");
+                time = sdf.format(date);
+                if (toClass == null || toClass.equals("") || title == null || title.equals("")||content==null||content.equals("")) {
+                    Toast.makeText(getActivity(), "信息不完整", Toast.LENGTH_SHORT).show();
+                } else if (material.getText().toString().contains("上传资料小于8MB")) {
+                    Message msg = handler.obtainMessage();
+                    msg.what = 2;
+                    msg.sendToTarget();
+                } else {
+                    File file = new File(filepath);
+                    RequestBody fileBody = RequestBody.create(MediaType.parse("application/octet-stream"), file);
+                    RequestBody requestBody = new MultipartBuilder()
+                            .type(MultipartBuilder.FORM)
+                            .addPart(Headers.of(
+                                    "Content-Disposition",
+                                    "form-data;name=\"ted_id\""),
+                                    RequestBody.create(null, tedId))
+                            .addPart(Headers.of(
+                                    "Content-Disposition",
+                                    "form-data;name=\"toClass\""),
+                                    RequestBody.create(null, toClass))
+                            .addPart(Headers.of(
+                                    "Content-Disposition",
+                                    "form-data;name=\"title\""),
+                                    RequestBody.create(null, title))
+                            .addPart(Headers.of(
+                                    "Content-Disposition",
+                                    "form-data;name=\"content\""),
+                                    RequestBody.create(null, content))
+                            .addPart(Headers.of(
+                                    "Content-Disposition",
+                                    "form-data;name=\"time\""),
+                                    RequestBody.create(null, time))
+                            .addPart(Headers.of(
+                                    "Content-Disposition",
+                                    "form-data; name=\"file\"; filename=\"" + filename + "\""), fileBody)
+                            .build();
+
+                    Request request = new Request.Builder()
+                            .url(urlUpLode)
+                            .post(requestBody)
+                            .build();
+
+                    okHttpClient = new OkHttpClient();
+
+                    Call call = okHttpClient.newCall(request);
+                    call.enqueue(new Callback() {
+                        @Override
+                        public void onFailure(Request request, IOException e) {
+                            Message msg = handler.obtainMessage();
+                            msg.what = 0;
+                            msg.sendToTarget();
+                        }
+
+                        @Override
+                        public void onResponse(Response response) throws IOException {
+//                        Headers responseHeaders = response.headers();
+//                        for (int i = 0; i < responseHeaders.size(); i++) {
+//                            System.out.println(responseHeaders.name(i) + ": " + responseHeaders.value(i));
+//                        }
+                            System.out.println(response.body().string());
+                            Message msg = handler.obtainMessage();
+                            msg.what = 1;
+                            handler.sendMessage(msg);
+                        }
+                    });
+                }
             }
         });
     }
@@ -173,78 +244,92 @@ public class TabAnewwork extends Fragment {
         }
     }
 
-    class myThread extends Thread {
+    class MyThread extends Thread {
 
         @Override
         public void run() {
-            tedId = (String) share.getParam(getActivity(), "xuehao", "");
-            title = work_title.getText().toString();
-            content = work_content.getText().toString();
-            Date date = new Date();
-            //format的格式可以任意
-            DateFormat sdf = new SimpleDateFormat("MM/dd HH:mm");
-            time = sdf.format(date);
-            if (toClass != null && title!=null) {
+            Looper.prepare();
+            handler = new Handler() {
+                @Override
+                public void handleMessage(Message msg) {
+                    final MainActivity Main = (MainActivity) getActivity();
+                    if (msg.what == 0) {
+                        Toast.makeText(Main, "上传失败", Toast.LENGTH_SHORT).show();
+                        System.out.println("error");
+                    } else if (msg.what == 1) {
+                        System.out.println("ok");
+                        Toast.makeText(Main, "上传成功", Toast.LENGTH_SHORT).show();
+//                        select_class.setSelection(0);
+//                        work_title.setText("");
+//                        work_content.setText("");
+//                        material.setText("上传资料小于8MB");
+//                        filename=null;
+//                        filepath=null;
+                    }else if(msg.what==2){
+                        new AlertDialog.Builder(getActivity())
+                                .setTitle("确认")
+                                .setMessage("确定不上传资料吗？")
+                                .setPositiveButton("是", new DialogInterface.OnClickListener(){
 
-                File file = new File(filepath);
-                RequestBody fileBody = RequestBody.create(MediaType.parse("application/octet-stream"), file);
-                RequestBody requestBody = new MultipartBuilder()
-                        .type(MultipartBuilder.FORM)
-                        .addPart(Headers.of(
-                                "Content-Disposition",
-                                "form-data;name=\"ted_id\""),
-                                RequestBody.create(null, tedId))
-                        .addPart(Headers.of(
-                                "Content-Disposition",
-                                "form-data;name=\"toClass\""),
-                                RequestBody.create(null, toClass))
-                        .addPart(Headers.of(
-                                "Content-Disposition",
-                                "form-data;name=\"title\""),
-                                RequestBody.create(null, title))
-                        .addPart(Headers.of(
-                                "Content-Disposition",
-                                "form-data;name=\"content\""),
-                                RequestBody.create(null, content))
-                        .addPart(Headers.of(
-                                "Content-Disposition",
-                                "form-data;name=\"time\""),
-                                RequestBody.create(null, time))
-                        .addPart(Headers.of(
-                                "Content-Disposition",
-                                "form-data; name=\"file\"; filename=\"test.png\""), fileBody)
-                        .build();
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        RequestBody requestBody = new MultipartBuilder()
+                                                .type(MultipartBuilder.FORM)
+                                                .addPart(Headers.of(
+                                                        "Content-Disposition",
+                                                        "form-data;name=\"ted_id\""),
+                                                        RequestBody.create(null, tedId))
+                                                .addPart(Headers.of(
+                                                        "Content-Disposition",
+                                                        "form-data;name=\"toClass\""),
+                                                        RequestBody.create(null, toClass))
+                                                .addPart(Headers.of(
+                                                        "Content-Disposition",
+                                                        "form-data;name=\"title\""),
+                                                        RequestBody.create(null, title))
+                                                .addPart(Headers.of(
+                                                        "Content-Disposition",
+                                                        "form-data;name=\"content\""),
+                                                        RequestBody.create(null, content))
+                                                .addPart(Headers.of(
+                                                        "Content-Disposition",
+                                                        "form-data;name=\"time\""),
+                                                        RequestBody.create(null, time)).build();
+                                        Request request = new Request.Builder()
+                                                .url(urlUpLode)
+                                                .post(requestBody)
+                                                .build();
 
-                Request request = new Request.Builder()
-                        .url(urlUpLode)
-                        .post(requestBody)
-                        .build();
+                                        okHttpClient = new OkHttpClient();
 
-                okHttpClient = new OkHttpClient();
+                                        Call call = okHttpClient.newCall(request);
+                                        call.enqueue(new com.squareup.okhttp.Callback() {
+                                            @Override
+                                            public void onFailure(Request request, IOException e) {
+                                                System.out.println("error");
+                                                Toast.makeText(Main, "新建失败", Toast.LENGTH_SHORT).show();
+                                            }
 
-                Call call = okHttpClient.newCall(request);
-                call.enqueue(new Callback() {
-                    @Override
-                    public void onFailure(Request request, IOException e) {
-                        Message msg = handler.obtainMessage();
-                        msg.what = 0;
-                        msg.sendToTarget();
+                                            @Override
+                                            public void onResponse(Response response) throws IOException {
+                                                System.out.println(response.body().string());
+                                                Toast.makeText(Main, "新建成功", Toast.LENGTH_SHORT).show();
+                                            }
+                                        });
+                                    }
+                                })
+                                .setNegativeButton("否", new DialogInterface.OnClickListener(){
+
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.dismiss();
+                                    }
+                                })
+                                .show();
                     }
-
-                    @Override
-                    public void onResponse(Response response) throws IOException {
-//                        Headers responseHeaders = response.headers();
-//                        for (int i = 0; i < responseHeaders.size(); i++) {
-//                            System.out.println(responseHeaders.name(i) + ": " + responseHeaders.value(i));
-//                        }
-                        System.out.println(response.body().string());
-                        Message msg = handler.obtainMessage();
-                        msg.what = 1;
-                        msg.sendToTarget();
-                    }
-                });
-
-            }
+                }
+            };
+            Looper.loop();
         }
     }
 }
