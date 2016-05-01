@@ -3,6 +3,8 @@ package com.example.ys.datashare.view_subs;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -58,6 +60,16 @@ public class TabAnewwork extends Fragment {
 
     private int tedId;
     private String toClass, title, content, time;
+    private Handler handler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            if(msg.what==0){
+                Toast.makeText(getActivity(), "失败", Toast.LENGTH_SHORT).show();
+            }else if(msg.what==1){
+                Toast.makeText(getActivity(), "成功", Toast.LENGTH_SHORT).show();
+            }
+        }
+    };
 
     private static int REQUESTCODE = 11;
 
@@ -206,12 +218,16 @@ public class TabAnewwork extends Fragment {
                 call.enqueue(new Callback() {
                     @Override
                     public void onFailure(Request request, IOException e) {
-
+                        Message msg = handler.obtainMessage();
+                        msg.what = 0;
+                        msg.sendToTarget();
                     }
 
                     @Override
                     public void onResponse(Response response) throws IOException {
-
+                        Message msg = handler.obtainMessage();
+                        msg.what = 1;
+                        msg.sendToTarget();
                     }
                 });
 
