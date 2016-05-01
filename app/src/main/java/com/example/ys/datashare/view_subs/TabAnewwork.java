@@ -58,7 +58,7 @@ public class TabAnewwork extends Fragment {
     private View mainview;
     private String filename, filepath;
 
-    private int tedId;
+    private String tedId;
     private String toClass, title, content, time;
     private Handler handler = new Handler(){
         @Override
@@ -125,6 +125,7 @@ public class TabAnewwork extends Fragment {
         work_title = (EditText) mainview.findViewById(R.id.work_title);
         work_content = (EditText) mainview.findViewById(R.id.work_content);
         material = (TextView) mainview.findViewById(R.id.work_material);
+        upload = (Button)mainview.findViewById(R.id.uplodeButton);
     }
 
     private void initEvent() {
@@ -152,6 +153,13 @@ public class TabAnewwork extends Fragment {
                 startActivityForResult(intent, REQUESTCODE);
             }
         });
+        upload.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                myThread uplodeThread = new myThread();
+                uplodeThread.start();
+            }
+        });
     }
 
     @Override
@@ -165,11 +173,11 @@ public class TabAnewwork extends Fragment {
         }
     }
 
-    class myThread implements Runnable {
+    class myThread extends Thread {
 
         @Override
         public void run() {
-            tedId = (int) share.getParam(getActivity(), "xuehao", 0);
+            tedId = (String) share.getParam(getActivity(), "xuehao", "");
             title = work_title.getText().toString();
             content = work_content.getText().toString();
             Date date = new Date();
@@ -185,7 +193,7 @@ public class TabAnewwork extends Fragment {
                         .addPart(Headers.of(
                                 "Content-Disposition",
                                 "form-data;name=\"ted_id\""),
-                                RequestBody.create(null, tedId + ""))
+                                RequestBody.create(null, tedId))
                         .addPart(Headers.of(
                                 "Content-Disposition",
                                 "form-data;name=\"toClass\""),
@@ -204,7 +212,7 @@ public class TabAnewwork extends Fragment {
                                 RequestBody.create(null, time))
                         .addPart(Headers.of(
                                 "Content-Disposition",
-                                "form-data; name=\"file\""), fileBody)
+                                "form-data; name=\"file\"; filename=\"test.png\""), fileBody)
                         .build();
 
                 Request request = new Request.Builder()
@@ -225,6 +233,11 @@ public class TabAnewwork extends Fragment {
 
                     @Override
                     public void onResponse(Response response) throws IOException {
+//                        Headers responseHeaders = response.headers();
+//                        for (int i = 0; i < responseHeaders.size(); i++) {
+//                            System.out.println(responseHeaders.name(i) + ": " + responseHeaders.value(i));
+//                        }
+                        System.out.println(response.body().string());
                         Message msg = handler.obtainMessage();
                         msg.what = 1;
                         msg.sendToTarget();
