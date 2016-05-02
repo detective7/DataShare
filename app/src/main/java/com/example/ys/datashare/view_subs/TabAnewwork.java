@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.HandlerThread;
 import android.os.Looper;
 import android.os.Message;
 import android.support.v4.app.Fragment;
@@ -67,8 +68,28 @@ public class TabAnewwork extends Fragment {
     Date date;
     DateFormat sdf;
     MyThread testThread;
-    private Handler handler;
-
+    private Handler mainHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            final MainActivity Main = (MainActivity) getActivity();
+            if (msg.what == 0) {
+                Toast.makeText(Main, "新建失败", Toast.LENGTH_SHORT).show();
+                System.out.println("error");
+            } else if (msg.what == 1) {
+                System.out.println("ok");
+                Toast.makeText(Main, "新建成功", Toast.LENGTH_SHORT).show();
+                select_class.setSelection(0);
+                work_title.setText("");
+                work_content.setText("");
+                material.setText("上传资料小于8MB");
+                filename = null;
+                filepath = null;
+            }else if (msg.what == 10) {
+                Toast.makeText(Main, (String)msg.obj, Toast.LENGTH_SHORT).show();
+            }
+        }
+    };
 
     private static int REQUESTCODE = 11;
 
@@ -120,7 +141,7 @@ public class TabAnewwork extends Fragment {
     }
 
     private void initVIew() {
-        testThread = new MyThread();
+        testThread = new MyThread("Handler Thread");
         testThread.start();
         select_class = (Spinner) mainview.findViewById(R.id.spinner);
         work_title = (EditText) mainview.findViewById(R.id.work_title);
@@ -162,14 +183,13 @@ public class TabAnewwork extends Fragment {
                 content = work_content.getText().toString();
                 date = new Date();
                 //format的格式可以任意
-                sdf = new SimpleDateFormat("MM/dd HH:mm");
+
+                sdf = new SimpleDateFormat("yy/MM/dd HH:mm");
                 time = sdf.format(date);
-                if (toClass == null || toClass.equals("") || title == null || title.equals("")||content==null||content.equals("")) {
+                if (toClass == null || toClass.equals("") || title == null || title.equals("") || content == null || content.equals("")) {
                     Toast.makeText(getActivity(), "信息不完整", Toast.LENGTH_SHORT).show();
                 } else if (material.getText().toString().contains("上传资料小于8MB")) {
-                    Message msg = handler.obtainMessage();
-                    msg.what = 2;
-                    msg.sendToTarget();
+                    testThread.handler.sendEmptyMessage(2);
                 } else {
                     File file = new File(filepath);
                     RequestBody fileBody = RequestBody.create(MediaType.parse("application/octet-stream"), file);
@@ -211,9 +231,7 @@ public class TabAnewwork extends Fragment {
                     call.enqueue(new Callback() {
                         @Override
                         public void onFailure(Request request, IOException e) {
-                            Message msg = handler.obtainMessage();
-                            msg.what = 0;
-                            msg.sendToTarget();
+                            mainHandler.sendEmptyMessage(0);
                         }
 
                         @Override
@@ -222,10 +240,18 @@ public class TabAnewwork extends Fragment {
 //                        for (int i = 0; i < responseHeaders.size(); i++) {
 //                            System.out.println(responseHeaders.name(i) + ": " + responseHeaders.value(i));
 //                        }
-                            System.out.println(response.body().string());
-                            Message msg = handler.obtainMessage();
-                            msg.what = 1;
-                            handler.sendMessage(msg);
+                            String resMsg = response.body().string();
+                            System.out.println(resMsg);
+                            if(resMsg.contains("success")){
+                                mainHandler.sendEmptyMessage(1);
+                            }else if(resMsg.contains("false")){
+                                String[] sp1 = resMsg.split(":");
+                                String[] sp2 = sp1[1].split(",");
+                                Message msg = new Message();
+                                msg.what=10;
+                                msg.obj=sp2[0];
+                                mainHandler.sendMessage(msg);
+                            }
                         }
                     });
                 }
@@ -244,7 +270,13 @@ public class TabAnewwork extends Fragment {
         }
     }
 
-    class MyThread extends Thread {
+    class MyThread extends HandlerThread {
+
+        private Handler handler;
+
+        public MyThread(String name) {
+            super(name);
+        }
 
         @Override
         public void run() {
@@ -252,81 +284,71 @@ public class TabAnewwork extends Fragment {
             handler = new Handler() {
                 @Override
                 public void handleMessage(Message msg) {
-                    final MainActivity Main = (MainActivity) getActivity();
-                    if (msg.what == 0) {
-                        Toast.makeText(Main, "上传失败", Toast.LENGTH_SHORT).show();
-                        System.out.println("error");
-                    } else if (msg.what == 1) {
-                        System.out.println("ok");
-                        Toast.makeText(Main, "上传成功", Toast.LENGTH_SHORT).show();
-//                        select_class.setSelection(0);
-//                        work_title.setText("");
-//                        work_content.setText("");
-//                        material.setText("上传资料小于8MB");
-//                        filename=null;
-//                        filepath=null;
-                    }else if(msg.what==2){
-                        new AlertDialog.Builder(getActivity())
-                                .setTitle("确认")
-                                .setMessage("确定不上传资料吗？")
-                                .setPositiveButton("是", new DialogInterface.OnClickListener(){
 
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        RequestBody requestBody = new MultipartBuilder()
-                                                .type(MultipartBuilder.FORM)
-                                                .addPart(Headers.of(
-                                                        "Content-Disposition",
-                                                        "form-data;name=\"ted_id\""),
-                                                        RequestBody.create(null, tedId))
-                                                .addPart(Headers.of(
-                                                        "Content-Disposition",
-                                                        "form-data;name=\"toClass\""),
-                                                        RequestBody.create(null, toClass))
-                                                .addPart(Headers.of(
-                                                        "Content-Disposition",
-                                                        "form-data;name=\"title\""),
-                                                        RequestBody.create(null, title))
-                                                .addPart(Headers.of(
-                                                        "Content-Disposition",
-                                                        "form-data;name=\"content\""),
-                                                        RequestBody.create(null, content))
-                                                .addPart(Headers.of(
-                                                        "Content-Disposition",
-                                                        "form-data;name=\"time\""),
-                                                        RequestBody.create(null, time)).build();
-                                        Request request = new Request.Builder()
-                                                .url(urlUpLode)
-                                                .post(requestBody)
-                                                .build();
+                    new AlertDialog.Builder(getActivity())
+                            .setTitle("确认")
+                            .setMessage("确定不上传资料吗？")
+                            .setPositiveButton("是", new DialogInterface.OnClickListener() {
 
-                                        okHttpClient = new OkHttpClient();
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    RequestBody requestBody = new MultipartBuilder()
+                                            .type(MultipartBuilder.FORM)
+                                            .addPart(Headers.of(
+                                                    "Content-Disposition",
+                                                    "form-data;name=\"ted_id\""),
+                                                    RequestBody.create(null, tedId))
+                                            .addPart(Headers.of(
+                                                    "Content-Disposition",
+                                                    "form-data;name=\"toClass\""),
+                                                    RequestBody.create(null, toClass))
+                                            .addPart(Headers.of(
+                                                    "Content-Disposition",
+                                                    "form-data;name=\"title\""),
+                                                    RequestBody.create(null, title))
+                                            .addPart(Headers.of(
+                                                    "Content-Disposition",
+                                                    "form-data;name=\"content\""),
+                                                    RequestBody.create(null, content))
+                                            .addPart(Headers.of(
+                                                    "Content-Disposition",
+                                                    "form-data;name=\"time\""),
+                                                    RequestBody.create(null, time)).build();
+                                    Request request = new Request.Builder()
+                                            .url(urlUpLode)
+                                            .post(requestBody)
+                                            .build();
 
-                                        Call call = okHttpClient.newCall(request);
-                                        call.enqueue(new com.squareup.okhttp.Callback() {
-                                            @Override
-                                            public void onFailure(Request request, IOException e) {
-                                                System.out.println("error");
-                                                Toast.makeText(Main, "新建失败", Toast.LENGTH_SHORT).show();
+                                    okHttpClient = new OkHttpClient();
+
+                                    Call call = okHttpClient.newCall(request);
+                                    call.enqueue(new com.squareup.okhttp.Callback() {
+                                        @Override
+                                        public void onFailure(Request request, IOException e) {
+                                            mainHandler.sendEmptyMessage(0);
+                                        }
+
+                                        @Override
+                                        public void onResponse(Response response) throws IOException {
+                                            String resmsg = response.body().string();
+                                            System.out.println(resmsg);
+                                            if(resmsg.contains("success")){
+                                                mainHandler.sendEmptyMessage(1);
+                                            }else if(resmsg.contains("false")){
+                                                mainHandler.sendEmptyMessage(10);
                                             }
+                                        }
+                                    });
+                                }
+                            })
+                            .setNegativeButton("否", new DialogInterface.OnClickListener() {
 
-                                            @Override
-                                            public void onResponse(Response response) throws IOException {
-                                                System.out.println(response.body().string());
-                                                Toast.makeText(Main, "新建成功", Toast.LENGTH_SHORT).show();
-                                            }
-                                        });
-                                    }
-                                })
-                                .setNegativeButton("否", new DialogInterface.OnClickListener(){
-
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        dialog.dismiss();
-                                    }
-                                })
-                                .show();
-                    }
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                }
+                            })
+                            .show();
                 }
             };
             Looper.loop();
