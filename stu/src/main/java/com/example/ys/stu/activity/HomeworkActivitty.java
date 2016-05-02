@@ -1,4 +1,4 @@
-package com.example.ys.datashare.activity;
+package com.example.ys.stu.activity;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -7,8 +7,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.example.ys.datashare.R;
-import com.example.ys.datashare.model.Homework;
+import com.example.ys.stu.R;
+import com.example.ys.stu.model.Homework;
+
 
 public class HomeworkActivitty extends Activity {
 

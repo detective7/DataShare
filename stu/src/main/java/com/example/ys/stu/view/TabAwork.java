@@ -16,7 +16,6 @@ import com.example.ys.stu.R;
 import com.example.ys.stu.activity.MainActivity;
 import com.example.ys.stu.view_subs.TabAever;
 import com.example.ys.stu.view_subs.TabAgetted;
-import com.example.ys.stu.view_subs.TabAnewwork;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -24,8 +23,8 @@ import com.example.ys.stu.view_subs.TabAnewwork;
 public class TabAwork extends Fragment {
 
     private MainActivity Main;
-    private TextView ever, getted, newWork;
-    private Fragment ever_fm, getted_fm, newWork_fm,now_fm;
+    private TextView never, getted;
+    private Fragment never_fm, getted_fm,now_fm;
     private View mainView;
 
     public TabAwork() {
@@ -47,27 +46,25 @@ public class TabAwork extends Fragment {
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     private void initView() {
         Main = (MainActivity) getActivity();
-        ever = (TextView) mainView.findViewById(R.id.title_ever);
+        never = (TextView) mainView.findViewById(R.id.title_never);
         getted = (TextView) mainView.findViewById(R.id.title_getted);
-        newWork = (TextView) mainView.findViewById(R.id.title_newwork);
-        ever_fm = new TabAever();
+        never_fm = new TabAever();
         getted_fm = new TabAgetted();
-        newWork_fm = new TabAnewwork();
-        ever.setBackground(Main.getResources().getDrawable(R.drawable.textview_border));
+        never.setBackground(Main.getResources().getDrawable(R.drawable.textview_border));
         // 默认首次填充已发布
         FragmentTransaction ft = getFragmentManager().beginTransaction();
-        ft.add(R.id.work_context, ever_fm).commit();
-        now_fm = ever_fm;
+        ft.add(R.id.work_context, never_fm).commit();
+        now_fm = never_fm;
     }
 
     private void changeVIew() {
-        ever.setOnClickListener(new View.OnClickListener() {
+        never.setOnClickListener(new View.OnClickListener() {
             @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
             @Override
             public void onClick(View v) {
-                change(ever_fm);
-                ever.setBackground(Main.getResources().getDrawable(R.drawable.textview_border));
-                now_fm = ever_fm;
+                change(never_fm);
+                never.setBackground(Main.getResources().getDrawable(R.drawable.textview_border));
+                now_fm = never_fm;
             }
         });
         getted.setOnClickListener(new View.OnClickListener() {
@@ -79,23 +76,13 @@ public class TabAwork extends Fragment {
                 now_fm = getted_fm;
             }
         });
-        newWork.setOnClickListener(new View.OnClickListener() {
-            @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-            @Override
-            public void onClick(View v) {
-                change(newWork_fm);
-                newWork.setBackground(Main.getResources().getDrawable(R.drawable.textview_border));
-                now_fm = newWork_fm;
-            }
-        });
 
     }
 
     @SuppressLint("NewApi")
     public void clean() {
-        ever.setBackground(Main.getResources().getDrawable(R.drawable.textview_border2));
+        never.setBackground(Main.getResources().getDrawable(R.drawable.textview_border2));
         getted.setBackground(Main.getResources().getDrawable(R.drawable.textview_border2));
-        newWork.setBackground(Main.getResources().getDrawable(R.drawable.textview_border2));
     }
 
     public void change(Fragment fm_next) {

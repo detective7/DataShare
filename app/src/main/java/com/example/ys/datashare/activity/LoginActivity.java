@@ -127,7 +127,7 @@ public class LoginActivity extends Activity {
 
         private int success;
         private int statu;
-        private String message;
+        private String message,userClass;
 
         @Override
         protected void onPreExecute() {
@@ -149,6 +149,7 @@ public class LoginActivity extends Activity {
                 message = json.getString("message");
                 success = json.getInt("success");
                 statu = json.getInt("statu");
+                userClass = json.getString("class");
                 Log.d("success", success + "");
                 return message;
             } catch (Exception e) {
@@ -163,18 +164,19 @@ public class LoginActivity extends Activity {
             pDialog.dismiss();
             //doInBackground返回值-->s
             if (success == 1) {
-                if (statu == 1) {
+                if (statu == 2) {
                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                     SharedPreUtil LoginSha = new SharedPreUtil("login");
                     LoginSha.setParam(LoginActivity.this, "xuehao", xuehao);
                     LoginSha.setParam(LoginActivity.this, "mima", mima);
                     LoginSha.setParam(LoginActivity.this, "statu", statu);
+                    LoginSha.setParam(LoginActivity.this, "userClass", userClass);
                     Log.d("abc", xuehao + "   " + mima);
                     Toast.makeText(getApplicationContext(), s, Toast.LENGTH_SHORT).show();
                     LoginActivity.this.startActivity(intent);
                     LoginActivity.this.finish();
-                } else if (statu == 2) {
-                    Toast.makeText(LoginActivity.this, "请选择学生版APP", Toast.LENGTH_LONG).show();
+                } else if (statu == 1) {
+                    Toast.makeText(LoginActivity.this, "请选择教师版APP", Toast.LENGTH_LONG).show();
                 }
             }else {
                 Toast.makeText(getApplicationContext(), s, Toast.LENGTH_SHORT).show();

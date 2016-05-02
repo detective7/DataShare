@@ -16,7 +16,7 @@ import com.example.ys.stu.config.Constant;
 public class TabAever extends Fragment {
 
     private View mainView;
-    private static String urlYiFaBu = Constant.MYURL+"yifabu.php";
+    private static String urlYiFaBu = Constant.MYURL+"weitijiao.php";
 
 
 

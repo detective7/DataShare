@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/backg_gs_null"
-    tools:context="com.example.ys.datashare.activity.HomeworkActivitty">
+    tools:context="com.example.ys.stu.activity.HomeworkActivitty">
 
     <LinearLayout
         android:id="@+id/HWCaiDan"
