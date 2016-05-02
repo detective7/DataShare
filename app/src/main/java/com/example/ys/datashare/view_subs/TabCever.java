@@ -33,7 +33,7 @@ import java.util.ArrayList;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class TabAever extends ListFragment {
+public class TabCever extends ListFragment {
 
     private OkHttpClient okHttpClient;
     private Request request;
@@ -66,7 +66,7 @@ public class TabAever extends ListFragment {
     };
 
 
-    public TabAever() {
+    public TabCever() {
         // Required empty public constructor
     }
 
@@ -74,10 +74,10 @@ public class TabAever extends ListFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        mainView = inflater.inflate(R.layout.tab_a_ever, container, false);
-        hwListView = (ListView) mainView.findViewById(R.id.hwListview);
-        initView();
-        initEvent();
+        mainView = inflater.inflate(R.layout.tab_c_ever, container, false);
+//        hwListView = (ListView) mainView.findViewById(R.id.hwListview);
+//        initView();
+//        initEvent();
         return mainView;
     }
 
@@ -108,8 +108,7 @@ public class TabAever extends ListFragment {
 //                    System.out.println(hw.get(i));
 //                }
                 try {
-                    // 好像无效
-                    // 以防有时候数据没准备好久发送了消息
+                    //以防有时候数据没准备好久发送了消息
                     Thread.sleep(500);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
