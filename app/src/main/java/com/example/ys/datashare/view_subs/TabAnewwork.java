@@ -75,9 +75,7 @@ public class TabAnewwork extends Fragment {
             final MainActivity Main = (MainActivity) getActivity();
             if (msg.what == 0) {
                 Toast.makeText(Main, "新建失败", Toast.LENGTH_SHORT).show();
-                System.out.println("error");
             } else if (msg.what == 1) {
-                System.out.println("ok");
                 Toast.makeText(Main, "新建成功", Toast.LENGTH_SHORT).show();
                 select_class.setSelection(0);
                 work_title.setText("");
