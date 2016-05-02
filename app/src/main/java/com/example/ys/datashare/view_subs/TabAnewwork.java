@@ -182,7 +182,7 @@ public class TabAnewwork extends Fragment {
                 date = new Date();
                 //format的格式可以任意
 
-                sdf = new SimpleDateFormat("yy/MM/dd HH:mm");
+                sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm");
                 time = sdf.format(date);
                 if (toClass == null || toClass.equals("") || title == null || title.equals("") || content == null || content.equals("")) {
                     Toast.makeText(getActivity(), "信息不完整", Toast.LENGTH_SHORT).show();

@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/backg_gs_null"
+    tools:context="com.example.ys.datashare.activity.HomeworkActivitty">
+
+    <LinearLayout
+        android:id="@+id/HWCaiDan"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:background="@color/caiDan"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:minHeight="40dp">
+
+        <TextView
+            android:id="@+id/HWBack"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingBottom="5dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:paddingTop="5dp"
+            android:text="&lt;"
+            android:textColor="@color/ziTi"
+            android:textSize="30dp" />
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:text="作业详细"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="@color/ziTi"
+            android:textSize="18dp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/HWXiangXi"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="80dp"
+        android:background="@drawable/loginyuanjiao"
+        android:minHeight="110dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/hwxx_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="#00FFFFFF"
+            android:padding="18dp"
+            android:text="作业标题"
+            android:textColor="@color/ziTi"
+            android:textColorHint="@color/ziTi"
+            android:textSize="18dp"
+            android:inputType="number" />
+
+        <TextView
+            android:id="@+id/hwxx_class"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#00FFFFFF"
+            android:padding="18dp"
+            android:text="发送班级"
+            android:textColor="@color/ziTi"
+            android:textColorHint="@color/ziTi"
+            android:textSize="18dp" />
+
+        <TextView
+            android:id="@+id/hwxx_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#00FFFFFF"
+            android:padding="18dp"
+            android:text="作业内容"
+            android:lines="5"
+            android:textColor="@color/ziTi"
+            android:textColorHint="@color/ziTi"
+            android:textSize="18dp" />
+
+
+            <TextView
+                android:id="@+id/hwxx_material"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#00FFFFFF"
+                android:padding="18dp"
+                android:text="包含文件"
+                android:textColor="@color/ziTi"
+                android:textColorHint="@color/ziTi"
+                android:textSize="18dp"/>
+
+        <TextView
+            android:id="@+id/hwxx_time"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#00FFFFFF"
+            android:text="发布时间"
+            android:padding="18dp"
+            android:textColor="@color/ziTi"
+            android:textColorHint="@color/ziTi"
+            android:gravity="right"
+            android:textSize="18dp"/>
+
+    </LinearLayout>
+
+    <!--<Button-->
+        <!--android:id="@+id/zhuCe"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_below="@id/zhuCeXiangXi"-->
+        <!--android:layout_marginBottom="50dp"-->
+        <!--android:layout_marginLeft="20dp"-->
+        <!--android:layout_marginRight="20dp"-->
+        <!--android:layout_marginTop="20dp"-->
+        <!--android:background="@drawable/loginyuanjiao"-->
+        <!--android:padding="12dp"-->
+        <!--android:text="修改"-->
+        <!--android:textColor="@color/ziTi"-->
+        <!--android:textSize="18dp"/>-->
+
+</RelativeLayout>

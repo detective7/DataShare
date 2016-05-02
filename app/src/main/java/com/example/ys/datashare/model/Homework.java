@@ -1,11 +1,13 @@
 package com.example.ys.datashare.model;
 
+import java.io.Serializable;
+
 /**
  * 作者： Ys
  * 日期： 2016/4/30
- * 功能：
+ * 功能：Homework实例类，实现Serializable实例化接口，才可以用Bundle传值
  */
-public class Homework {
+public class Homework implements Serializable {
 
     private int hw_id;
     private String teacher;

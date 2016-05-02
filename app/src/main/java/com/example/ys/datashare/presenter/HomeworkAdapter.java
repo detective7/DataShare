@@ -11,6 +11,7 @@ import com.example.ys.datashare.R;
 import com.example.ys.datashare.model.Homework;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 作者： Ys
@@ -19,7 +20,7 @@ import java.util.ArrayList;
  */
 public class HomeworkAdapter extends BaseAdapter {
 
-    ArrayList<Homework> homeworks;
+    List<Homework> homeworks;
     LayoutInflater inflater;
 
     public HomeworkAdapter(Context context,ArrayList<Homework> homeworks){
@@ -63,8 +64,8 @@ public class HomeworkAdapter extends BaseAdapter {
         }else{
             holder = (ViewHolder)convertView.getTag();
         }
-        holder.item_title.setText(homework.getTitle());
-        holder.item_author.setText(homework.getTeacher());
+        holder.item_title.setText("title："+homework.getTitle());
+        holder.item_author.setText("toClass："+homework.getToClass());
         holder.item_time.setText(homework.getTime());
         return convertView;
     }
