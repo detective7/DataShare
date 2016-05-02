@@ -103,7 +103,7 @@ public class SignInActivity extends Activity {
                 if (hasFocus) {
 
                 } else if ("".equals(userNum) || userNum == null) {
-                    Toast.makeText(SignInActivity.this, "请输入学号", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SignInActivity.this, "请输入教师编号", Toast.LENGTH_SHORT).show();
                 } else {
                     // TODO 验证学号是否存在已经放在点击注册那里，有空再完成这里，异步有两次连接
                 }
@@ -181,7 +181,7 @@ public class SignInActivity extends Activity {
         password_copy = zhuCeMiMa2.getText().toString().trim();
         phone = zhuCeShouJi.getText().toString().trim();
         if (userNum == null || userNum.equals("")) {
-            Toast.makeText(SignInActivity.this, "请填写学号", Toast.LENGTH_SHORT).show();
+            Toast.makeText(SignInActivity.this, "请填写教师编号", Toast.LENGTH_SHORT).show();
             return false;
         } else if (password == null || password.equals("")) {
             Toast.makeText(SignInActivity.this, "请填写密码", Toast.LENGTH_SHORT).show();
@@ -237,7 +237,7 @@ public class SignInActivity extends Activity {
             //doInBackground返回值-->s
             Toast.makeText(getApplicationContext(), s, Toast.LENGTH_LONG).show();
             if (success == 0) {
-                Intent intent = new Intent(SignInActivity.this, MainActivity.class);
+                Intent intent = new Intent(SignInActivity.this, LoginActivity.class);
                 SignInActivity.this.startActivity(intent);
                 SignInActivity.this.finish();
             }
@@ -306,7 +306,7 @@ public class SignInActivity extends Activity {
                 Object data = msg.obj;
                 Log.e("event", "event=" + event + "---result:" + result);
                 if (result == SMSSDK.RESULT_COMPLETE) {
-                    //短信注册成功后，返回MainActivity,然后提示新好友
+                    //短信注册成功后
                     if (event == SMSSDK.EVENT_SUBMIT_VERIFICATION_CODE) {//提交验证码成功,验证通过
                         SmsPass = true;
                         Toast.makeText(getApplicationContext(), "验证码校验成功", Toast.LENGTH_SHORT).show();
