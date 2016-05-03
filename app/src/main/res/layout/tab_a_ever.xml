@@ -4,7 +4,6 @@
     android:layout_height="match_parent"
     tools:context="com.example.ys.datashare.view_subs.TabAever">
 
-    <!-- TODO: Update blank fragment layout -->
     <ListView
         android:id="@+id/hwListview"
         android:layout_width="fill_parent"

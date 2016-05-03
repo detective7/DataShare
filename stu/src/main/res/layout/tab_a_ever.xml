@@ -4,10 +4,16 @@
     android:layout_height="match_parent"
     tools:context="com.example.ys.stu.view_subs.TabAever">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="111111111111" />
+    <ListView
+        android:id="@+id/hwListview"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:dividerHeight="5dip" />
+
+    <ListView
+        android:id="@android:id/list"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+    </ListView>
 
 </FrameLayout>

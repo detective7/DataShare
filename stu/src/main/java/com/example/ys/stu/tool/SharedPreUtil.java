@@ -73,4 +73,16 @@ public class SharedPreUtil {
 
         return null;
     }
+
+    /**
+     * 删除数据的方法
+     */
+    public static void deleParam(Context context) {
+
+        SharedPreferences sp = context.getSharedPreferences(file_name, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.clear();
+        editor.commit();
+    }
+
 }

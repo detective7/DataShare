@@ -85,7 +85,7 @@ public class LoginActivity extends Activity {
                 if (hasFocus) {
 
                 } else if ("".equals(xuehao) || xuehao == null) {
-                    Toast.makeText(LoginActivity.this, "请输入学号", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LoginActivity.this, "请输入教师编号", Toast.LENGTH_SHORT).show();
                 }
 
             }
@@ -110,7 +110,7 @@ public class LoginActivity extends Activity {
                 xuehao = xueHao.getText().toString().trim();
                 mima = miMa.getText().toString().trim();
                 if ("".equals(xuehao) || xuehao == null) {
-                    Toast.makeText(LoginActivity.this, "请输入学号", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LoginActivity.this, "请输入教师编号", Toast.LENGTH_SHORT).show();
                 } else if ("".equals(mima) || mima == null) {
                     Toast.makeText(LoginActivity.this, "请输入密码", Toast.LENGTH_SHORT).show();
                 } else {
@@ -164,7 +164,7 @@ public class LoginActivity extends Activity {
             pDialog.dismiss();
             //doInBackground返回值-->s
             if (success == 1) {
-                if (statu == 2) {
+                if (statu == 1) {
                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                     SharedPreUtil LoginSha = new SharedPreUtil("login");
                     LoginSha.setParam(LoginActivity.this, "xuehao", xuehao);
@@ -175,8 +175,8 @@ public class LoginActivity extends Activity {
                     Toast.makeText(getApplicationContext(), s, Toast.LENGTH_SHORT).show();
                     LoginActivity.this.startActivity(intent);
                     LoginActivity.this.finish();
-                } else if (statu == 1) {
-                    Toast.makeText(LoginActivity.this, "请选择教师版APP", Toast.LENGTH_LONG).show();
+                } else if (statu == 2) {
+                    Toast.makeText(LoginActivity.this, "请选择学生版APP", Toast.LENGTH_LONG).show();
                 }
             }else {
                 Toast.makeText(getApplicationContext(), s, Toast.LENGTH_SHORT).show();

@@ -52,13 +52,13 @@ public class TabAever extends ListFragment {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            if(msg.what==1){
-                ArrayList<Homework> hws = (ArrayList<Homework>)msg.obj;
+            if (msg.what == 1) {
+                ArrayList<Homework> hws = (ArrayList<Homework>) msg.obj;
                 hwsFang = new ArrayList<Homework>();
-                for (int i=hws.size()-1;i>=0;i--){
+                for (int i = hws.size() - 1; i >= 0; i--) {
                     hwsFang.add(hws.get(i));
                 }
-                hwAdapter = new HomeworkAdapter(getActivity(),hwsFang);
+                hwAdapter = new HomeworkAdapter(getActivity(), hwsFang);
                 hwListView.setAdapter(hwAdapter);
             }
 
@@ -102,23 +102,26 @@ public class TabAever extends ListFragment {
             @Override
             public void onResponse(Response response) throws IOException {
                 String jasonHW = response.body().string();
-                ArrayList<Homework> hw = JSON.parseObject(jasonHW, new TypeReference<ArrayList<Homework>>(){});
+                if (jasonHW.contains("hw_id")) {
+                    ArrayList<Homework> hw = JSON.parseObject(jasonHW, new TypeReference<ArrayList<Homework>>() {
+                    });
 //                for(int i=0;i<hw.size();i++)
 //                {
 //                    System.out.println(hw.get(i));
 //                }
-                try {
-                    // 好像无效
-                    // 以防有时候数据没准备好久发送了消息
-                    Thread.sleep(500);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                Message msg = new Message();
-                msg.what=1;
-                msg.obj=hw;
-                mainHandler.sendMessage(msg);
+                    try {
+                        // 好像无效
+                        // 以防有时候数据没准备好久发送了消息
+                        Thread.sleep(500);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    Message msg = new Message();
+                    msg.what = 1;
+                    msg.obj = hw;
+                    mainHandler.sendMessage(msg);
 
+                }
             }
         });
 

@@ -35,7 +35,7 @@ public class HomeworkActivitty extends Activity {
         toClass.setText("发送班级：" + hw.getToClass());
         content = (TextView) this.findViewById(R.id.hwxx_content);
         content.setText("作业内容：\n" + hw.getContent());
-        hw_dl=(Button)material.findViewById(R.id.hw_download);
+        hw_dl=(Button)this.findViewById(R.id.hw_download);
 
         material = (TextView) this.findViewById(R.id.hwxx_material);
         if (hw.getMaterial() != null) {

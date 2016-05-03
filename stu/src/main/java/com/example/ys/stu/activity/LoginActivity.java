@@ -127,6 +127,7 @@ public class LoginActivity extends Activity {
 
         private int success;
         private int statu;
+        private String message,userClass;
 
         @Override
         protected void onPreExecute() {
@@ -148,6 +149,7 @@ public class LoginActivity extends Activity {
                 String message = json.getString("message");
                 success = json.getInt("success");
                 statu = json.getInt("statu");
+                userClass = json.getString("class");
                 Log.d("success",success+"");
                 return message;
             }catch(Exception e){
@@ -168,6 +170,7 @@ public class LoginActivity extends Activity {
                     LoginSha.setParam(LoginActivity.this, "xuehao", xuehao);
                     LoginSha.setParam(LoginActivity.this, "mima", mima);
                     LoginSha.setParam(LoginActivity.this, "statu", statu);
+                    LoginSha.setParam(LoginActivity.this, "userClass", userClass);
                     Log.d("abc", xuehao + "   " + mima);
                     Toast.makeText(getApplicationContext(), s, Toast.LENGTH_LONG).show();
                     LoginActivity.this.startActivity(intent);
@@ -175,6 +178,8 @@ public class LoginActivity extends Activity {
                 }else if(statu == 1){
                     Toast.makeText(LoginActivity.this, "请选择教师版APP", Toast.LENGTH_LONG).show();
                 }
+            }else {
+                Toast.makeText(getApplicationContext(), s, Toast.LENGTH_SHORT).show();
             }
         }
     }

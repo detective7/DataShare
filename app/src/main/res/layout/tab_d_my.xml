@@ -5,7 +5,6 @@
     android:orientation="vertical"
     tools:context="com.example.ys.datashare.view.TabDmy">
 
-    <!-- TODO: Update blank fragment layout -->
     <RelativeLayout
         android:id="@+id/all"
         android:layout_width="fill_parent"
