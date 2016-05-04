@@ -97,7 +97,7 @@ public class HomeworkActivitty extends Activity {
                 downloadFileName = m1[3];
                 builder.add("mName", downloadFileName);
                 request = new Request.Builder()
-                        .url("http://192.168.88.100/uplodeFile/testPHP.txt")
+                        .url(urlDownload)
                         .post(builder.build())
                         .build();
                 okHttpClient.newCall(request).enqueue(new Callback() {
@@ -115,8 +115,8 @@ public class HomeworkActivitty extends Activity {
                          * 将input流中的信息写入SDCard
                          */
                         String SDCard = Environment.getExternalStorageDirectory() + "";
-//                        downloadFilePath = SDCard + "/stuData/" + downloadFileName;//文件存储路径
-                        downloadFilePath = SDCard + "/stuData/testPHP.txt";
+                        downloadFilePath = SDCard + "/stuData/" + downloadFileName;//文件存储路径
+//                        downloadFilePath = SDCard + "/stuData/testPHP.txt";
                         downloadFile = new File(downloadFilePath);
                         downloadInput = response.body().byteStream();
                         if (downloadFile.exists()) {
@@ -132,8 +132,7 @@ public class HomeworkActivitty extends Activity {
                                 long sum = 0;
                                 File dir = new File(SDCard + "/stuData/");
                                 if (!dir.exists()) dir.mkdirs();
-                                File file = new File(dir, "testPHP.txt");
-                                fos = new FileOutputStream(file);
+                                fos = new FileOutputStream(downloadFile);
                                 while ((len = downloadInput.read(buf)) != -1) {
                                     sum += len;
                                     fos.write(buf, 0, len);
