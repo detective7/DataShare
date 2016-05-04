@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -13,11 +15,16 @@ import android.widget.Toast;
 import com.example.ys.stu.R;
 import com.example.ys.stu.config.Constant;
 import com.example.ys.stu.model.Homework;
+import com.example.ys.stu.tool.SharedPreUtil;
 import com.squareup.okhttp.Call;
 import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.FormEncodingBuilder;
+import com.squareup.okhttp.Headers;
+import com.squareup.okhttp.MediaType;
+import com.squareup.okhttp.MultipartBuilder;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
+import com.squareup.okhttp.RequestBody;
 import com.squareup.okhttp.Response;
 
 import java.io.File;
@@ -41,6 +48,10 @@ public class HomeworkActivitty extends Activity {
     private TextView HWback, title, toClass, content, material, time, zuoYe;
     private Button hw_dl, tiJiao;
     private Homework hw;
+
+    private Date date;
+    private DateFormat sdf;
+    private SharedPreUtil share = new SharedPreUtil("login");
     private String urlUpLode = Constant.MYURL + "tijiaozuoye.php";
     private String uploadFileName, uploadFilePath, timeSt;
     //从老师布置的作业上下载的资料
@@ -48,9 +59,21 @@ public class HomeworkActivitty extends Activity {
     private File downloadFile;
     private String downloadFileName, downloadFilePath;
     private InputStream downloadInput;
-
-    Date date;
-    DateFormat sdf;
+    private Handler mainHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            if (msg.what == 0) {
+                Toast.makeText(HomeworkActivitty.this, "提交失败", Toast.LENGTH_SHORT).show();
+            } else if (msg.what == 1) {
+                Toast.makeText(HomeworkActivitty.this, "提交成功", Toast.LENGTH_SHORT).show();
+                //返回作业列表界面
+                HomeworkActivitty.this.onBackPressed();
+            }else if (msg.what == 10) {
+                Toast.makeText(HomeworkActivitty.this, (String)msg.obj, Toast.LENGTH_SHORT).show();
+            }
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -123,9 +146,9 @@ public class HomeworkActivitty extends Activity {
                             Log.d("abc", "phone file exits");
                             return;
                         } else {
-                            byte[] buf=new byte[2048];
+                            byte[] buf = new byte[2048];
                             int len = 0;
-                            FileOutputStream fos=null;
+                            FileOutputStream fos = null;
                             try {
                                 final long total = response.body().contentLength();
                                 Log.i("abc", "total--" + total);
@@ -150,7 +173,7 @@ public class HomeworkActivitty extends Activity {
                                 } catch (IOException e) {
                                 }
                             }
-
+//                            失败的，传入的文件会变大，打不开，待观察
 //                            Headers responseHeaders = response.headers();
 //                            for (int i = 0; i < responseHeaders.size(); i++) {
 //                                Log.d("abc",responseHeaders.name(i) + ": " + responseHeaders.value(i));
@@ -181,6 +204,7 @@ public class HomeworkActivitty extends Activity {
                 onBackPressed();
             }
         });
+        //跳转到FileFinder选择提交作业文件
         zuoYe.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -188,18 +212,81 @@ public class HomeworkActivitty extends Activity {
                 startActivityForResult(intent, REQUESTCODE);
             }
         });
+        //提交作业
         tiJiao.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                date = new Date();
-                //format的格式可以任意
-                sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm");
-                timeSt = sdf.format(date);
+                int hw_id;
+                String stu_id;
+                hw_id=hw.getHw_id();
+                stu_id = (String) share.getParam(HomeworkActivitty.this, "xuehao", "");
+                //uploadFilePath
+                if(uploadFilePath!=null&&uploadFileName!=null){
+                    File file = new File(uploadFilePath);
+
+                    date = new Date();
+                    //format的格式可以任意
+                    sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm");
+                    timeSt = sdf.format(date);
+                    RequestBody fileBody = RequestBody.create(MediaType.parse("application/octet-stream"), file);
+                    RequestBody requestBody = new MultipartBuilder()
+                            .type(MultipartBuilder.FORM)
+                            .addPart(Headers.of(
+                                    "Content-Disposition",
+                                    "form-data;name=\"stu_id\""),
+                                    RequestBody.create(null, stu_id))
+                            .addPart(Headers.of(
+                                    "Content-Disposition",
+                                    "form-data;name=\"hw_id\""),
+                                    RequestBody.create(null, hw_id+""))
+                            .addPart(Headers.of(
+                                    "Content-Disposition",
+                                    "form-data;name=\"time\""),
+                                    RequestBody.create(null, timeSt))
+                            .addPart(Headers.of(
+                                    "Content-Disposition",
+                                    "form-data; name=\"file\"; filename=\"" + uploadFileName + "\""), fileBody)
+                            .build();
+
+                    Request request = new Request.Builder()
+                            .url(urlUpLode)
+                            .post(requestBody)
+                            .build();
+
+                    okHttpClient = new OkHttpClient();
+
+                    Call call = okHttpClient.newCall(request);
+                    call.enqueue(new Callback() {
+                        @Override
+                        public void onFailure(Request request, IOException e) {
+                            mainHandler.sendEmptyMessage(0);
+                        }
+
+                        @Override
+                        public void onResponse(Response response) throws IOException {
+                            String resMsg = response.body().string();
+                            Log.d("abc",resMsg);
+                            if(resMsg.contains("success")){
+                                mainHandler.sendEmptyMessage(1);
+                            }else if(resMsg.contains("false")){
+                                String[] sp1 = resMsg.split("Error:");
+                                String[] sp2 = sp1[1].split(",");
+                                Message msg = new Message();
+                                msg.what=10;
+                                msg.obj=sp2[0];
+                                mainHandler.sendMessage(msg);
+                            }
+                        }
+                    });
+                }else{
+                    Toast.makeText(HomeworkActivitty.this, "还未选择文件", Toast.LENGTH_SHORT).show();
+                }
+
             }
         });
     }
 
-
+    //选择提交作业文件返回文件名和路径
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
