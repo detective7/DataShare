@@ -53,22 +53,22 @@
                 android:layout_marginTop="10dp"
                 android:background="@color/white" />
 
-            <TextView
-                android:id="@+id/title_getted"
-                android:layout_width="wrap_content"
-                android:layout_height="fill_parent"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="已查收"
-                android:textColor="@color/white"
-                android:textSize="17sp" />
+            <!--<TextView-->
+                <!--android:id="@+id/title_getted"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="fill_parent"-->
+                <!--android:layout_weight="1"-->
+                <!--android:gravity="center"-->
+                <!--android:text="已查收"-->
+                <!--android:textColor="@color/white"-->
+                <!--android:textSize="17sp" />-->
 
-            <View
-                android:layout_width="1dp"
-                android:layout_height="fill_parent"
-                android:layout_marginBottom="10dp"
-                android:layout_marginTop="10dp"
-                android:background="@color/white" />
+            <!--<View-->
+                <!--android:layout_width="1dp"-->
+                <!--android:layout_height="fill_parent"-->
+                <!--android:layout_marginBottom="10dp"-->
+                <!--android:layout_marginTop="10dp"-->
+                <!--android:background="@color/white" />-->
 
             <TextView
                 android:id="@+id/title_newwork"

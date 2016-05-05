@@ -6,5 +6,7 @@ package com.example.ys.datashare.config;
  * 功能：
  */
 public class Constant {
-    public static final String MYURL = "http://192.168.88.100/testShare/";
+//    public static final String MYURL = "http://192.168.88.100/testShare/";
+
+    public static final String MYURL = "http://172.16.152.2/testShare/";
 }
