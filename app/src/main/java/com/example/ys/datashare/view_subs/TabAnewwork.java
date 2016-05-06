@@ -184,11 +184,14 @@ public class TabAnewwork extends Fragment {
 
                 sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm");
                 time = sdf.format(date);
+                Log.d("abc",content.length()+"");
                 if (toClass == null || toClass.equals("") || title == null || title.equals("") || content == null || content.equals("")) {
                     Toast.makeText(getActivity(), "信息不完整", Toast.LENGTH_SHORT).show();
+                } else if (content.length()>500) {
+                    Toast.makeText(getActivity(), "作业内容不超过500字", Toast.LENGTH_SHORT).show();
                 } else if (material.getText().toString().contains("上传资料小于8MB")) {
                     testThread.handler.sendEmptyMessage(2);
-                } else {
+                }  else {
                     File file = new File(filepath);
                     RequestBody fileBody = RequestBody.create(MediaType.parse("application/octet-stream"), file);
                     RequestBody requestBody = new MultipartBuilder()
@@ -249,6 +252,7 @@ public class TabAnewwork extends Fragment {
                                 msg.what=10;
                                 msg.obj=sp2[0];
                                 mainHandler.sendMessage(msg);
+
                             }
                         }
                     });

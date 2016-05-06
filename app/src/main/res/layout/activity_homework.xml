@@ -79,7 +79,7 @@
         <TextView
             android:id="@+id/hwxx_content"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="140dp"
             android:background="#00FFFFFF"
             android:padding="18dp"
             android:text="作业内容"
@@ -113,13 +113,50 @@
             android:textSize="18dp"/>
 
     </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/HWXiangXi"
+        android:orientation="horizontal"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:background="@drawable/loginyuanjiao"
+        android:layout_marginTop="5dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="#00FFFFFF"
+            android:text="已提交统计："
+            android:padding="10dp"
+            android:textColor="@color/ziTi"
+            android:textSize="18dp"/>
+        <TextView
+            android:id="@+id/tongJi"
+            android:layout_width="115dp"
+            android:layout_height="wrap_content"
+            android:background="#00FFFFFF"
+            android:text="51/55"
+            android:padding="10dp"
+            android:textColor="@color/ziTi"
+            android:textSize="18dp"/>
+        <Button
+            android:id="@+id/tiJiaoXiangXi"
+            android:layout_width="wrap_content"
+            android:layout_height="37dp"
+            android:textSize="18dp"
+            android:text=" 详细"
+            android:gravity="center"
+            android:layout_gravity="center"/>
+
+    </LinearLayout>
+
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="下载材料"
+        android:text="已提交作业打包下载"
         android:id="@+id/hw_download"
-        android:layout_marginTop="22dp"
+        android:layout_marginTop="52dp"
         android:layout_below="@+id/HWXiangXi"
         android:layout_centerHorizontal="true" />
 

@@ -6,5 +6,5 @@ package com.example.ys.stu.config;
  * 功能：
  */
 public class Constant {
-    public static final String MYURL = "http://172.16.152.2/testShare/";
+    public static final String MYURL = "http://172.16.152.2/";
 }

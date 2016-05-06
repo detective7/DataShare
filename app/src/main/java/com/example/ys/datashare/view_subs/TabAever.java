@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.ListFragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -102,25 +103,14 @@ public class TabAever extends ListFragment {
             @Override
             public void onResponse(Response response) throws IOException {
                 String jasonHW = response.body().string();
+                Log.d("abc",jasonHW);
                 if (jasonHW.contains("hw_id")) {
                     ArrayList<Homework> hw = JSON.parseObject(jasonHW, new TypeReference<ArrayList<Homework>>() {
                     });
-//                for(int i=0;i<hw.size();i++)
-//                {
-//                    System.out.println(hw.get(i));
-//                }
-                    try {
-                        // 好像无效
-                        // 以防有时候数据没准备好久发送了消息
-                        Thread.sleep(500);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
                     Message msg = new Message();
                     msg.what = 1;
                     msg.obj = hw;
                     mainHandler.sendMessage(msg);
-
                 }
             }
         });
