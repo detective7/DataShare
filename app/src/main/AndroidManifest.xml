@@ -38,15 +38,16 @@
         <activity android:name=".activity.LoginActivity" />
         <activity android:name=".activity.SignInActivity" />
         <activity
-        android:name=".activity.MainActivity"
-        android:theme="@style/Theme.AppCompat" />
+            android:name=".activity.MainActivity"
+            android:theme="@style/Theme.AppCompat" />
         <activity android:name=".activity.FileFinderActivity" />
         <activity
             android:name="com.mob.tools.MobUIShell"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:theme="@android:style/Theme.Translucent.NoTitleBar"
             android:windowSoftInputMode="stateHidden|adjustResize" />
-        <activity android:name=".activity.HomeworkActivitty"></activity>
+        <activity android:name=".activity.HomeworkActivitty" />
+        <activity android:name=".activity.DataActivity"></activity>
     </application>
 
 </manifest>

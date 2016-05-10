@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:paddingTop="20dp"
     android:orientation="vertical"
-    tools:context="com.example.ys.datashare.view_subs.TabCnew">
+    tools:context="com.example.ys.stu.view_subs.TabCnew">
 
     <TextView
         android:id="@+id/nwtv1"

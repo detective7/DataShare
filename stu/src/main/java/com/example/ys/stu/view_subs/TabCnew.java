@@ -1,4 +1,4 @@
-package com.example.ys.datashare.view_subs;
+package com.example.ys.stu.view_subs;
 
 
 import android.content.Intent;
@@ -17,11 +17,11 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.ys.datashare.R;
-import com.example.ys.datashare.activity.FileFinderActivity;
-import com.example.ys.datashare.activity.MainActivity;
-import com.example.ys.datashare.config.Constant;
-import com.example.ys.datashare.tool.SharedPreUtil;
+import com.example.ys.stu.R;
+import com.example.ys.stu.activity.FileFinderActivity;
+import com.example.ys.stu.activity.MainActivity;
+import com.example.ys.stu.config.Constant;
+import com.example.ys.stu.tool.SharedPreUtil;
 import com.squareup.okhttp.Call;
 import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.Headers;

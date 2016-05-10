@@ -2,7 +2,6 @@ package com.example.ys.stu.activity;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -38,8 +37,8 @@ public class SignInActivity extends Activity {
     private ProgressDialog pDialog;
     private String userNum, password, password_copy, phone;
     private JsonPost jsonParser = new JsonPost();
-    private String APPKEY = "11bc365b9eff2";
-    private String APPSECRETE = "658f26cd66e813667521d0a915d95b56";
+    private String APPKEY = "1280c76e63f1c";
+    private String APPSECRETE = "f6d5a2d2d725e250aab91e6a005ca4d6";
     //倒计时是秒数
     private int i = 30;
     //判断输入是否通过，才可注册
@@ -85,6 +84,7 @@ public class SignInActivity extends Activity {
         zhuCe.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                SMSSDK.submitVerificationCode("86",zhuCeShouJi.getText().toString(), yanZhengMa.getText().toString());
                 userNum = zhuCeXueHao.getText().toString();
                 password = zhuCeMiMa.getText().toString();
                 phone = zhuCeShouJi.getText().toString();
@@ -170,6 +170,19 @@ public class SignInActivity extends Activity {
                 }
             }
         });
+
+        yanZhengMa.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+//                if (hasFocus) {
+//                    // 此处为得到焦点时的处理内容
+//                } else {
+//                    // 此处为失去焦点时的处理内容
+//                    SMSSDK.submitVerificationCode("86",zhuCeShouJi.getText().toString(), yanZhengMa.getText().toString());
+//                }
+//
+            }
+        });
     }
 
     /**
@@ -237,8 +250,8 @@ public class SignInActivity extends Activity {
             //doInBackground返回值-->s
             Toast.makeText(getApplicationContext(), s, Toast.LENGTH_LONG).show();
             if (success == 0) {
-                Intent intent = new Intent(SignInActivity.this, LoginActivity.class);
-                SignInActivity.this.startActivity(intent);
+//                Intent intent = new Intent(SignInActivity.this, LoginActivity.class);
+//                SignInActivity.this.startActivity(intent);
                 SignInActivity.this.finish();
             }
         }
@@ -304,8 +317,9 @@ public class SignInActivity extends Activity {
             } else {
                 int event = msg.arg1;
                 int result = msg.arg2;
-                Object data = msg.obj;
-                Log.e("event", "event=" + event + "---result:" + result);
+                Object data = (Object)msg.obj;
+                //Log.e("event", "event=" + event + "---result:" + result);
+                Log.e("event", "event=" + event + "---result:" + result+ "---data:" + data.toString());
                 if (result == SMSSDK.RESULT_COMPLETE) {
                     //短信注册成功后
                     if (event == SMSSDK.EVENT_SUBMIT_VERIFICATION_CODE) {//提交验证码成功,验证通过
@@ -314,7 +328,7 @@ public class SignInActivity extends Activity {
                     } else if (event == SMSSDK.EVENT_GET_VERIFICATION_CODE) {//服务器验证码发送成功
                         Toast.makeText(getApplicationContext(), "验证码已经发送", Toast.LENGTH_SHORT).show();
                     }
-                } else {
+                } else{
                     Toast.makeText(SignInActivity.this, "验证码错误", Toast.LENGTH_SHORT).show();
                 }
             }

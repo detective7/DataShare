@@ -1,4 +1,4 @@
-package com.example.ys.datashare.view_subs;
+package com.example.ys.stu.view_subs;
 
 
 import android.content.Intent;
@@ -16,11 +16,11 @@ import android.widget.ListView;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
-import com.example.ys.datashare.R;
-import com.example.ys.datashare.activity.DataActivity;
-import com.example.ys.datashare.config.Constant;
-import com.example.ys.datashare.model.Data;
-import com.example.ys.datashare.presenter.DataAdapter;
+import com.example.ys.stu.R;
+import com.example.ys.stu.activity.DataActivity;
+import com.example.ys.stu.config.Constant;
+import com.example.ys.stu.model.Data;
+import com.example.ys.stu.presenter.DataAdapter;
 import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.FormEncodingBuilder;
 import com.squareup.okhttp.OkHttpClient;

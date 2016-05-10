@@ -4,10 +4,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/backg_gs_null"
-    tools:context="com.example.ys.stu.activity.SignInActivity">
-
+    tools:context="com.example.ys.datashare.activity.DataActivity">
     <LinearLayout
-        android:id="@+id/zhuCeCaiDan"
+        android:id="@+id/DataCaiDan"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
@@ -17,9 +16,8 @@
         android:gravity="center_vertical"
         android:orientation="horizontal"
         android:minHeight="40dp">
-
         <TextView
-            android:id="@+id/zhuCeBack"
+            android:id="@+id/dataBack"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingBottom="5dp"
@@ -35,117 +33,77 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="15dp"
-            android:text="注册"
+            android:text="资料详细"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:textColor="@color/ziTi"
             android:textSize="18dp" />
-    </LinearLayout>
-
+        </LinearLayout>
     <LinearLayout
-        android:id="@+id/zhuCeXiangXi"
+        android:id="@+id/DataXiangXi"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
-        android:layout_marginTop="130dp"
+        android:layout_marginTop="120dp"
         android:background="@drawable/loginyuanjiao"
-        android:minHeight="110dp"
         android:orientation="vertical">
-
-        <EditText
-            android:id="@+id/zhuCeXueHao"
+        <TextView
+            android:id="@+id/dataxx_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:background="#00FFFFFF"
-            android:hint="学号"
-            android:numeric="integer"
-            android:padding="18dp"
+            android:padding="20dp"
             android:textColor="@color/ziTi"
             android:textColorHint="@color/ziTi"
-            android:textSize="18dp"
-            android:inputType="number" />
-
-        <EditText
-            android:id="@+id/zhuCeMiMa"
+            android:textSize="18dp" />
+        <TextView
+            android:id="@+id/dataxx_author"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="#00FFFFFF"
+            android:padding="20dp"
+            android:textColor="@color/ziTi"
+            android:textColorHint="@color/ziTi"
+            android:textSize="18dp"/>
+        <TextView
+            android:id="@+id/dataxx_content"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="#00FFFFFF"
-            android:hint="密码"
-            android:inputType="textPassword"
-            android:padding="18dp"
+            android:padding="20dp"
             android:textColor="@color/ziTi"
             android:textColorHint="@color/ziTi"
             android:textSize="18dp" />
 
-        <EditText
-            android:id="@+id/zhuCeMiMa2"
+        <TextView
+            android:id="@+id/dataxx_material"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="#00FFFFFF"
-            android:hint="重复密码"
-            android:inputType="textPassword"
-            android:padding="18dp"
+            android:padding="20dp"
             android:textColor="@color/ziTi"
             android:textColorHint="@color/ziTi"
-            android:textSize="18dp" />
+            android:textSize="18dp"/>
 
-        <RelativeLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical">
-
-            <EditText
-                android:id="@+id/zhuCeShouJi"
-                android:layout_width="220dp"
-                android:layout_height="wrap_content"
-                android:background="#00FFFFFF"
-                android:hint="注册手机"
-                android:padding="18dp"
-                android:textColor="@color/ziTi"
-                android:textColorHint="@color/ziTi"
-                android:textSize="18dp"
-                android:inputType="number" />
-
-            <TextView
-                android:id="@+id/faSongYanZheng"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@color/qianZiTi"
-                android:padding="8dp"
-                android:layout_marginRight="8dp"
-                android:layout_centerVertical="true"
-                android:layout_alignParentRight="true"
-                android:text="发送验证码"
-                android:textSize="16dp" />
-        </RelativeLayout>
-
-        <EditText
-            android:id="@+id/yanZhengMa"
+        <TextView
+            android:id="@+id/dataxx_time"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="#00FFFFFF"
-            android:hint="验证码"
-            android:padding="18dp"
+            android:padding="20dp"
             android:textColor="@color/ziTi"
             android:textColorHint="@color/ziTi"
-            android:textSize="18dp"
-            android:inputType="number" />
-
-    </LinearLayout>
-
+            android:gravity="right"
+            android:textSize="18dp"/>
+        </LinearLayout>
     <Button
-        android:id="@+id/zhuCe"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/zhuCeXiangXi"
-        android:layout_marginBottom="50dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginTop="20dp"
-        android:background="@drawable/loginyuanjiao"
-        android:padding="12dp"
-        android:text="注册"
-        android:textColor="@color/ziTi"
-        android:textSize="18dp"/>
+        android:text="下载"
+        android:id="@+id/data_download"
+        android:layout_marginTop="30dp"
+        android:layout_below="@+id/DataXiangXi"
+        android:layout_centerHorizontal="true" />
 </RelativeLayout>
