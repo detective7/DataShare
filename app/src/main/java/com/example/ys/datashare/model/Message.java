@@ -9,7 +9,6 @@ public class Message {
     private int id;
     private String user_s;
     private String user_r;
-    private String title;
     private String text;
     private String time;
 
@@ -37,13 +36,6 @@ public class Message {
         this.user_r = user_r;
     }
 
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
 
     public String getText() {
         return text;
